@@ -1,6 +1,6 @@
 .. _m85:
 
-TSI Banner 
+TSI Banner
 ###########
 
 Overview
@@ -14,9 +14,9 @@ Building and Running
 This application can be built as follows:
 
 .. zephyr-app-commands::
-   :zephyr-app:  
+   :zephyr-app: tsi_app/m85
    :host-os: unix
-   :board: ek_tsi_skyp/m85 
+   :board: ek_tsi_skyp/m85
    :goals: run
    :compact:
 
@@ -25,8 +25,8 @@ Sample Output
 =============
 
 .. code-block:: console
-!! ------------------------------------------ !! 
-!! WELCOME TO TSAVORITE SCALABLE INTELLIGENCE !! 
+!! ------------------------------------------ !!
+!! WELCOME TO TSAVORITE SCALABLE INTELLIGENCE !!
 !! ------------------------------------------ !! 
 [00:00:00.010,000] <inf> m85: Test Platform: ek_tsi/skyp/m85
-[00:00:00.010,000] <wrn> m85: Testing on FPGA; Multi module init TBD
+[00:00:00.010,000] <wrn> m85: Testing on FPGA; Multi module init TBD 

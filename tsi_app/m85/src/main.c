@@ -1,12 +1,8 @@
-
-/*----------------------------------------------------------------------------------------------------- */
-/* Copyright (c) 2024 Tsavorite Scalable Intelligence, Inc. All rights reserved.                        */
-/*                                                                                                      */
-/*                                                                                                      */
-/* This file is the confidential and proprietary property of Tsavorite Scalable Intelligence, Inc       */
-/* Possession or use of this file requires a written license from Tsavorite Scalable Intelligence, Inc  */
-/*----------------------------------------------------------------------------------------------------- */
-
+/*
+ * Copyright (c) 2012-2014 Wind River Systems, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #include <stddef.h>
 #include <stdio.h>
@@ -20,19 +16,16 @@
 #define LOG_MODULE_NAME m85 
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
-
 int main(void)
 {
 
 	/* TSI banner */
-	printf("!! ------------------------------------------ !! \n"); 
+	printf("!! ------------------------------------------ !! \n");
 	printf("!! WELCOME TO TSAVORITE SCALABLE INTELLIGENCE !! \n"); 
-	printk("!! ------------------------------------------ !! \n"); 
+	printk("!! ------------------------------------------ !! \n");
         LOG_INF("Test Platform: %s",CONFIG_BOARD_TARGET);
-
 
         LOG_WRN("Testing on FPGA; Multi module init TBD");
 
 	return 0;
 }
-
