@@ -6,4 +6,4 @@ board:
     variants:
     - name: cortex-m85
       cpucluster: m85
-  - name: mimx8ml8     
+  - name: mimx8ml8

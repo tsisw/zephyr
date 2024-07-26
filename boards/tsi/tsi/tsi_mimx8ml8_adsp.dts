@@ -14,10 +14,16 @@
 	compatible = "nxp";
 
 	chosen {
-		zephyr,sram = &sram0;
+		//zephyr,sram = &sram0;
+		zephyr,sram = &sram_txe;
 
 		zephyr,console = &uart4;
 		zephyr,shell-uart = &uart4;
+	};
+	sram_txe: memory@60040000 {
+		device_type = "memory";
+		compatible = "mmio-sram";
+		reg = <0x60040000 DT_SIZE_K(512)>;
 	};
 };
 

@@ -1,5 +1,5 @@
 identifier: tsi/mimx8ml8/adsp
-name: NXP i.MX 8MPLUS Audio DSP
+name: TSI DSP
 type: mcu
 arch: xtensa
 toolchain:
