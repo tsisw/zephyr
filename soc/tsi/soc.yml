@@ -6,3 +6,4 @@ family:
           - name: skyp
             cpuclusters:
               - name: m85
+              - name: txe

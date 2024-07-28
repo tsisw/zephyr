@@ -4,6 +4,7 @@ board:
   socs:
   - name: skyp
     variants:
-    - name: cortex-m85
-      cpucluster: m85
-  - name: mimx8ml8
+      - name: tensilica
+        cpucluster: txe
+      - name: cortex-m85
+        cpucluster: m85

@@ -1,4 +1,4 @@
-identifier: tsi/mimx8ml8/adsp
+identifier: tsi/skyp/txe
 name: TSI DSP
 type: mcu
 arch: xtensa
