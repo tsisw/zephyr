@@ -1,6 +1,6 @@
 board:
   name: tsi
-  vendor: Tsavorite
+  vendor: tsi
   socs:
   - name: skyp
     variants:

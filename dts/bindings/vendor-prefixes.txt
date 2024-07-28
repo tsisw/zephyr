@@ -682,6 +682,7 @@ tq	TQ-Systems GmbH
 tronfy	Tronfy
 tronsmart	Tronsmart
 truly	Truly Semiconductors Limited
+tsi	Tsavorite Scalable Intelligence
 tsd	Theobroma Systems Design und Consulting GmbH
 tyan	Tyan Computer Corporation
 u-blox	u-blox
