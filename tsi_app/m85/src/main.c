@@ -21,10 +21,10 @@ int main(void)
 
 	/* TSI banner */
 	PRINT_TSI_BOOT_BANNER();
-        LOG_INF("Test Platform: %s",CONFIG_BOARD_TARGET);
+	LOG_INF("Test Platform: %s", CONFIG_BOARD_TARGET);
 
-        LOG_WRN("Testing on FPGA; Multi module init TBD");
-        LOG_DBG("Debugging - tsi_app module");
+	LOG_WRN("Testing on FPGA; Multi module init TBD");
+	LOG_DBG("Debugging - tsi_app module");
 
 	return 0;
 }
