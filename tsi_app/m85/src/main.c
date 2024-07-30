@@ -12,7 +12,7 @@
 #include <zephyr/logging/log_ctrl.h>
 #include <zephyr/logging/log_output.h>
 
-#define PRINT_TSI_BOOT_BANNER()  printk("***** !! WELCOME TO TSAVORITE SCALABLE INTELLIGENCE !! *****\n")
+#define PRINT_TSI_BOOT_BANNER()  printk("***!!WELCOME TO TSAVORITE SCALABLE INTELLIGENCe!!***\n")
 #define LOG_MODULE_NAME tsi_m85_
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 

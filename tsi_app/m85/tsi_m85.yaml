@@ -4,14 +4,14 @@ sample:
 common:
   tags: introduction
   integration_platforms:
-    - ek_tsi_skyp
+    - tsi_skyp_m85
   harness: console
   harness_config:
     type: one_line
     regex:
       -***** !! WELCOME TO TSAVORITE SCALABLE INTELLIGENCE !! *****
-      - [00:00:00.010,000] <inf> tsi_m85: Test Platform: ek_tsi/skyp/m85
-      - [00:00:00.020,000] <wrn> tsi_m85: Testing on FPGA; Multi module init TBD
+      - [Time stamp] <inf> tsi_m85: Test Platform: ek_tsi/skyp/m85
+      - [Time stamp] <wrn> tsi_m85: Testing on FPGA; Multi module init TBD
 tests:
   sample.m85:
     tags: apps
