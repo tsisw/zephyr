@@ -7,8 +7,12 @@ config SOC_FAMILY_ARM
 config SOC_FAMILY_ARM64
 	bool
 
+config SOC_XTENSA_SAMPLE_CONTROLLER
+	bool
+
 config SOC_FAMILY
 	default "arm" if SOC_FAMILY_ARM
 	default "arm64" if SOC_FAMILY_ARM64
+	
 
 rsource "*/Kconfig.soc"

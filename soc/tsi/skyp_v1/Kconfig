@@ -1,10 +1,12 @@
 # Copyright (c) 2024 Renesas Electronics Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-config SOC_SERIES_SKYP_V1
+#config SOC_SERIES_SKYP_V1
+config SOC_SKYP_M85
 	select ARM
 
-config SOC_SERIES_SKYP_V1
+#config SOC_SERIES_SKYP_V1
+config SOC_SKYP_M85
 	select CPU_CORTEX_M85
 	select CPU_HAS_ARM_SAU
 	select CPU_HAS_ARM_MPU
@@ -17,3 +19,26 @@ config SOC_SERIES_SKYP_V1
 config ARMV8_1_M_PMU_EVENTCNT
 	int
 	default 8 if SOC_SERIES_SKYP_V1
+
+
+#  config  SOC_SKYP_TXE 
+#     select XTENSA
+# 	select XTENSA_HAL if ("$(ZEPHYR_TOOLCHAIN_VARIANT)" != "xcc" && "$(ZEPHYR_TOOLCHAIN_VARIANT)" != "xt-clang")
+# 	select XTENSA_RESET_VECTOR
+# 	select XTENSA_USE_CORE_CRT1
+# 	select ATOMIC_OPERATIONS_BUILTIN
+# 	select GEN_ISR_TABLES
+# 	select XTENSA_SMALL_VECTOR_TABLE_ENTRY
+# 	select HAS_MCUX if CLOCK_CONTROL
+# 	select HAS_MCUX_CCM if CLOCK_CONTROL
+# 	select HAS_MCUX_IOMUXC if PINCTRL
+# 	select PINCTRL_IMX if HAS_MCUX_IOMUXC
+# 	select CPU_HAS_DCACHE
+
+config SOC_SKYP_TXE
+	select XTENSA
+	select XTENSA_HAL
+	select ARCH_SUPPORTS_COREDUMP	
+
+# config MCUX_CORE_SUFFIX
+# 	default "_dsp" if SOC_SKYP_TXE		

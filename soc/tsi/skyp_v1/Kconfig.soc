@@ -20,8 +20,19 @@ config SOC_SKYP_M85
 	help
 	  skyp_m85
 
+config SOC_SKYP_TXE
+	bool
+	select SOC_SKYP
+	help
+	  skyp_txe
+
+config SOC_TOOLCHAIN_NAME
+	string
+	default "sample_controller" if SOC_SKYP_TXE
+
 config SOC_SERIES
 	default "skyp_v1" if SOC_SERIES_SKYP_V1
 
 config SOC
-	default "skyp" if SOC_SKYP
+    default "skyp" if SOC_SKYP
+    

@@ -6,3 +6,5 @@ if SOC_FAMILY_ARM || SOC_FAMILY_ARM64
 rsource "*/Kconfig.defconfig"
 
 endif # SOC_FAMILY_ARM || SOC_FAMILY_ARM64
+
+

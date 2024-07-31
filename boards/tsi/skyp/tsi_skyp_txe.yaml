@@ -13,4 +13,4 @@ testing:
     - net
     - bluetooth
     - mcumgr
-vendor: nxp
+vendor: tsi

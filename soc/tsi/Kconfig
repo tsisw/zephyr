@@ -1,7 +1,7 @@
 # Copyright (c) 2024 TSI
 # SPDX-License-Identifier: Apache-2.0
 
-if SOC_FAMILY_ARM || SOC_FAMILY_ARM64
+if SOC_FAMILY_ARM || SOC_FAMILY_ARM64 #|| SOC_FAMILY_NXP_IMX
 
 rsource "*/Kconfig"
 
