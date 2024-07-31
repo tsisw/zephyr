@@ -21,31 +21,32 @@
 
 MEMORY
 {
-  dram1_0_seg :                       	org = 0x3FFC0000, len = 0x20000
-  dram0_0_seg :                       	org = 0x3FFE0000, len = 0x20000
-  iram0_0_seg :                       	org = 0x40000000, len = 0x178
-  iram0_1_seg :                       	org = 0x40000178, len = 0x8
-  iram0_2_seg :                       	org = 0x40000180, len = 0x38
-  iram0_3_seg :                       	org = 0x400001B8, len = 0x8
-  iram0_4_seg :                       	org = 0x400001C0, len = 0x38
-  iram0_5_seg :                       	org = 0x400001F8, len = 0x8
-  iram0_6_seg :                       	org = 0x40000200, len = 0x38
-  iram0_7_seg :                       	org = 0x40000238, len = 0x8
-  iram0_8_seg :                       	org = 0x40000240, len = 0x38
-  iram0_9_seg :                       	org = 0x40000278, len = 0x8
-  iram0_10_seg :                      	org = 0x40000280, len = 0x38
-  iram0_11_seg :                      	org = 0x400002B8, len = 0x8
-  iram0_12_seg :                      	org = 0x400002C0, len = 0x38
-  iram0_13_seg :                      	org = 0x400002F8, len = 0x8
-  iram0_14_seg :                      	org = 0x40000300, len = 0x38
-  iram0_15_seg :                      	org = 0x40000338, len = 0x8
-  iram0_16_seg :                      	org = 0x40000340, len = 0x38
-  iram0_17_seg :                      	org = 0x40000378, len = 0x48
-  iram0_18_seg :                      	org = 0x400003C0, len = 0x40
-  iram0_19_seg :                      	org = 0x40000400, len = 0x1FC00
+  dram1_0_seg :                       	org = 0x80608000, len = 0x8000
+  dram0_0_seg :                       	org = 0x70800000, len = 0x8000
+  iram0_0_seg :                       	org = 0x60600000, len = 0x178
+  iram0_1_seg :                       	org = 0x60600178, len = 0x8
+  iram0_2_seg :                       	org = 0x60600180, len = 0x38
+  iram0_3_seg :                       	org = ox606001B8, len = 0x8
+  iram0_4_seg :                       	org = 0x606001C0, len = 0x38
+  iram0_5_seg :                       	org = 0x606001F8, len = 0x8
+  iram0_6_seg :                       	org = 0x60600200, len = 0x38
+  iram0_7_seg :                       	org = 0x60600238, len = 0x8
+  iram0_8_seg :                       	org = 0x60600240, len = 0x38
+  iram0_9_seg :                       	org = 0x60600278, len = 0x8
+  iram0_10_seg :                      	org = 0x60600280, len = 0x38
+  iram0_11_seg :                      	org = 0x606002B8, len = 0x8
+  iram0_12_seg :                      	org = 0x606002C0, len = 0x38
+  iram0_13_seg :                      	org = 0x606002F8, len = 0x8
+  iram0_14_seg :                      	org = 0x60600300, len = 0x38
+  iram0_15_seg :                      	org = 0x60600338, len = 0x8
+  iram0_16_seg :                      	org = 0x60600340, len = 0x38
+  iram0_17_seg :                      	org = 0x60600378, len = 0x48
+  iram0_18_seg :                      	org = 0x606003C0, len = 0x40
+  iram0_19_seg :                      	org = 0x60600400, len = 0x800
   srom0_seg :                         	org = 0x50000000, len = 0x300
   srom1_seg :                         	org = 0x50000300, len = 0xFFFD00
-  RAM :                         	org = 0x60000000, len = 0x4000000
+  RAM :                         	org = 0x60601000, len = 0xff000
+  RAM1 :                         	org = 0x60700000, len = 0x100000
 #ifdef CONFIG_GEN_ISR_TABLES
   IDT_LIST : org = 0x3ffbe000, len = 0x2000
 #endif
@@ -81,6 +82,8 @@ PHDRS
   srom1_phdr PT_LOAD;
   sram0_phdr PT_LOAD;
   sram0_bss_phdr PT_LOAD;
+  sram1_phdr PT_LOAD;
+  sram1_bss_phdr PT_LOAD;
 }
 
 
@@ -88,68 +91,72 @@ PHDRS
 ENTRY(CONFIG_KERNEL_ENTRY)
 
 /*  Memory boundary addresses:  */
-_memmap_mem_dram1_start = 0x3ffc0000;
-_memmap_mem_dram1_end   = 0x3ffe0000;
-_memmap_mem_dram0_start = 0x3ffe0000;
-_memmap_mem_dram0_end   = 0x40000000;
-_memmap_mem_iram0_start = 0x40000000;
-_memmap_mem_iram0_end   = 0x40020000;
+_memmap_mem_dram1_start = 0x80608000;
+_memmap_mem_dram1_end   = 0x80610000;
+_memmap_mem_dram0_start = 0x70800000;
+_memmap_mem_dram0_end   = 0x70808000;
+_memmap_mem_iram0_start = 0x60600000;
+_memmap_mem_iram0_end   = 0x60600C00;
 _memmap_mem_srom_start = 0x50000000;
 _memmap_mem_srom_end   = 0x51000000;
-_memmap_mem_sram_start = 0x60000000;
-_memmap_mem_sram_end   = 0x64000000;
+_memmap_mem_sram_start = 0x60601000;
+_memmap_mem_sram_end   = 0x60700000;
+_memmap_mem_sram1_start = 0x60700000;
+_memmap_mem_sram1_end   = 0x60800000;
 
 /*  Memory segment boundary addresses:  */
-_memmap_seg_dram1_0_start = 0x3ffc0000;
-_memmap_seg_dram1_0_max   = 0x3ffe0000;
-_memmap_seg_dram0_0_start = 0x3ffe0000;
-_memmap_seg_dram0_0_max   = 0x40000000;
-_memmap_seg_iram0_0_start = 0x40000000;
-_memmap_seg_iram0_0_max   = 0x40000178;
-_memmap_seg_iram0_1_start = 0x40000178;
-_memmap_seg_iram0_1_max   = 0x40000180;
-_memmap_seg_iram0_2_start = 0x40000180;
-_memmap_seg_iram0_2_max   = 0x400001b8;
-_memmap_seg_iram0_3_start = 0x400001b8;
-_memmap_seg_iram0_3_max   = 0x400001c0;
-_memmap_seg_iram0_4_start = 0x400001c0;
-_memmap_seg_iram0_4_max   = 0x400001f8;
-_memmap_seg_iram0_5_start = 0x400001f8;
-_memmap_seg_iram0_5_max   = 0x40000200;
-_memmap_seg_iram0_6_start = 0x40000200;
-_memmap_seg_iram0_6_max   = 0x40000238;
-_memmap_seg_iram0_7_start = 0x40000238;
-_memmap_seg_iram0_7_max   = 0x40000240;
-_memmap_seg_iram0_8_start = 0x40000240;
-_memmap_seg_iram0_8_max   = 0x40000278;
-_memmap_seg_iram0_9_start = 0x40000278;
-_memmap_seg_iram0_9_max   = 0x40000280;
-_memmap_seg_iram0_10_start = 0x40000280;
-_memmap_seg_iram0_10_max   = 0x400002b8;
-_memmap_seg_iram0_11_start = 0x400002b8;
-_memmap_seg_iram0_11_max   = 0x400002c0;
-_memmap_seg_iram0_12_start = 0x400002c0;
-_memmap_seg_iram0_12_max   = 0x400002f8;
-_memmap_seg_iram0_13_start = 0x400002f8;
-_memmap_seg_iram0_13_max   = 0x40000300;
-_memmap_seg_iram0_14_start = 0x40000300;
-_memmap_seg_iram0_14_max   = 0x40000338;
-_memmap_seg_iram0_15_start = 0x40000338;
-_memmap_seg_iram0_15_max   = 0x40000340;
-_memmap_seg_iram0_16_start = 0x40000340;
-_memmap_seg_iram0_16_max   = 0x40000378;
-_memmap_seg_iram0_17_start = 0x40000378;
-_memmap_seg_iram0_17_max   = 0x400003c0;
-_memmap_seg_iram0_18_start = 0x400003c0;
-_memmap_seg_iram0_18_max   = 0x40000400;
-_memmap_seg_iram0_19_start = 0x40000400;
-_memmap_seg_iram0_19_max   = 0x40020000;
+_memmap_seg_dram1_0_start = 0x80608000;
+_memmap_seg_dram1_0_max   = 0x80610000;
+_memmap_seg_dram0_0_start = 0x70800000;
+_memmap_seg_dram0_0_max   = 0x70808000;
+_memmap_seg_iram0_0_start = 0x60600000;
+_memmap_seg_iram0_0_max   = 0x60600178;
+_memmap_seg_iram0_1_start = 0x60600178;
+_memmap_seg_iram0_1_max   = 0x60600180;
+_memmap_seg_iram0_2_start = 0x60600180;
+_memmap_seg_iram0_2_max   = 0x606001b8;
+_memmap_seg_iram0_3_start = 0x606001b8;
+_memmap_seg_iram0_3_max   = 0x606001c0;
+_memmap_seg_iram0_4_start = 0x606001c0;
+_memmap_seg_iram0_4_max   = 0x606001f8;
+_memmap_seg_iram0_5_start = 0x606001f8;
+_memmap_seg_iram0_5_max   = 0x60600200;
+_memmap_seg_iram0_6_start = 0x60600200;
+_memmap_seg_iram0_6_max   = 0x60600238;
+_memmap_seg_iram0_7_start = 0x60600238;
+_memmap_seg_iram0_7_max   = 0x60600240;
+_memmap_seg_iram0_8_start = 0x60600240;
+_memmap_seg_iram0_8_max   = 0x60600278;
+_memmap_seg_iram0_9_start = 0x60600278;
+_memmap_seg_iram0_9_max   = 0x60600280;
+_memmap_seg_iram0_10_start = 0x60600280;
+_memmap_seg_iram0_10_max   = 0x606002b8;
+_memmap_seg_iram0_11_start = 0x606002b8;
+_memmap_seg_iram0_11_max   = 0x606002c0;
+_memmap_seg_iram0_12_start = 0x606002c0;
+_memmap_seg_iram0_12_max   = 0x606002f8;
+_memmap_seg_iram0_13_start = 0x606002f8;
+_memmap_seg_iram0_13_max   = 0x60600300;
+_memmap_seg_iram0_14_start = 0x60600300;
+_memmap_seg_iram0_14_max   = 0x60600338;
+_memmap_seg_iram0_15_start = 0x60600338;
+_memmap_seg_iram0_15_max   = 0x60600340;
+_memmap_seg_iram0_16_start = 0x60600340;
+_memmap_seg_iram0_16_max   = 0x60600378;
+_memmap_seg_iram0_17_start = 0x60600378;
+_memmap_seg_iram0_17_max   = 0x606003c0;
+_memmap_seg_iram0_18_start = 0x606003c0;
+_memmap_seg_iram0_18_max   = 0x60600400;
+_memmap_seg_iram0_19_start = 0x60600400;
+_memmap_seg_iram0_19_max   = 0x60600C00;
 _memmap_seg_srom0_start = 0x50000000;
 _memmap_seg_srom0_max   = 0x50000300;
 _memmap_seg_srom1_start = 0x50000300;
 _memmap_seg_srom1_max   = 0x51000000;
-_memmap_seg_sram0_start = 0x60000000;
-_memmap_seg_sram0_max   = 0x64000000;
+_memmap_seg_sram0_start = 0x60601000;
+_memmap_seg_sram0_max   = 0x60700000;
+_memmap_seg_sram1_start = 0x60700000;
+_memmap_seg_sram1_max   = 0x60800000;
 
 _rom_store_table = 0;
 PROVIDE(_memmap_vecbase_reset = 0x40000000);
@@ -604,8 +611,8 @@ SECTIONS
     _stack_sentry = ALIGN(0x8);
     _memmap_seg_sram0_end = ALIGN(0x8);
   } >RAM :sram0_bss_phdr
-  __stack = 0x64000000;
-  _heap_sentry = 0x64000000;
+  __stack = 0x60800000;//0x600ff000; //0x64000000;
+  _heap_sentry = 0x60800000;//0x600ff000; //0x64000000;
   .comment  0 :  { *(.comment) }
   .debug  0 :  { *(.debug) }
   .line  0 :  { *(.line) }

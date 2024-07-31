@@ -28,13 +28,23 @@
 // };
 
 #include "sample_controller.dtsi"
+#include <mem.h>
 
 / {
 	model = "xt-sim";
 	compatible = "cdns,xtensa-sample-controller";
 
 	chosen {
-		zephyr,sram = &sram0;
+		// zephyr,sram = &sram0;
+		zephyr,sram = &sram_txe;
+		// zephyr,console = &uart4;
+		// zephyr,shell-uart = &uart4;
+	};
+	sram_txe: memory@60040000 {
+		device_type = "memory";
+		compatible = "mmio-sram";
+		reg = <0x60040000 DT_SIZE_K(512)>;
+		//reg = <0x60040000 0x80000>; // 512 * 1024 = 524288 (0x80000 in hex)
 	};
 };
 
