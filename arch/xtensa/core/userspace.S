@@ -296,14 +296,14 @@ xtensa_userspace_enter:
 	s32i a7, a1, 0
 
 	l32i a6, a1, 24
-	call4 xtensa_user_stack_perms
+	CALL xtensa_user_stack_perms
 
 	l32i a6, a1, 24
 #ifdef CONFIG_XTENSA_MMU
-	call4 xtensa_swap_update_page_tables
+	CALL xtensa_swap_update_page_tables
 #endif
 #ifdef CONFIG_XTENSA_MPU
-	call4 xtensa_mpu_map_write
+	CALL xtensa_mpu_map_write
 #endif
 
 #if XCHAL_HAVE_THREADPTR

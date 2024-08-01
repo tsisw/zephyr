@@ -15,19 +15,19 @@
 #define IRAM_RESERVE_HEADER_SPACE	0x400
 
 /*#define IRAM_BASE    0x3B6F8000*/
-#define IRAM_BASE      0x60600000
+#define IRAM_BASE      0x40001000
 #define IRAM_SIZE      0x800
 
 #define IRAM_SIZE	0x800
 
 /*#define SDRAM0_BASE	0x92400000*/
 /*#define SDRAM0_SIZE	0x800000*/
-#define SDRAM0_BASE    0x60601000
+#define SDRAM0_BASE    0x40010000
 #define SDRAM0_SIZE	   0xFF000
 
 /*#define SDRAM1_BASE	0x92C00000*/
 /*#define SDRAM1_SIZE	0x800000*/
-#define SDRAM1_BASE    0x60700000
+#define SDRAM1_BASE    0x40100000
 #define SDRAM1_SIZE    0x100000
 
 /* The reset vector address in SRAM and its size */
@@ -44,7 +44,7 @@
  * EXCEPTIONS and VECTORS
  */
 /*#define XCHAL_RESET_VECTOR0_PADDR_IRAM	0x3B6F8000*/
-#define XCHAL_RESET_VECTOR0_PADDR_IRAM 0x6060000
+#define XCHAL_RESET_VECTOR0_PADDR_IRAM 0x40001000
 
 /* Vector and literal sizes */
 #define MEM_VECT_LIT_SIZE			0x4
@@ -87,24 +87,24 @@
 
 /* physical DSP addresses */
 /*#define IRAM_BASE	0x3B6F8000*/
-#define IRAM_BASE   0x60600000
+#define IRAM_BASE   0x40001000
 #define IRAM_SIZE	0x800
 
 /*#define DRAM0_BASE	0x3B6E8000*/
-#define DRAM0_BASE	0x70800000
+#define DRAM0_BASE	0x40010000
 #define DRAM0_SIZE		0x8000
 
 /*#define DRAM1_BASE	0x3B6F0000*/
-#define DRAM1_BASE	0x80608000
+#define DRAM1_BASE	0x40020000
 #define DRAM1_SIZE		0x8000
 
 /*#define SDRAM0_BASE	0x92400000*/
-#define SDRAM0_BASE	0x60601000
+#define SDRAM0_BASE	0x40010000
 /*#define SDRAM0_SIZE	0x800000*/
 #define SDRAM0_SIZE		0xFF000
 
 /*#define SDRAM1_BASE	0x92C00000*/
-#define SDRAM1_BASE     0x60700000
+#define SDRAM1_BASE     0x40100000
 /*#define SDRAM1_SIZE	0x800000*/
 #define SDRAM1_SIZE     0x100000
 

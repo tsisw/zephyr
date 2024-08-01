@@ -287,10 +287,10 @@ noflush:
 	rsr a6, ZSR_CPU
 	l32i a6, a6, ___cpu_t_current_OFFSET
 #ifdef CONFIG_XTENSA_MMU
-	call4 xtensa_swap_update_page_tables
+	CALL xtensa_swap_update_page_tables
 #endif
 #ifdef CONFIG_XTENSA_MPU
-	call4 xtensa_mpu_map_write
+	CALL xtensa_mpu_map_write
 #endif
 
 	l32i a2, a3, 0
@@ -305,7 +305,7 @@ noflush:
 	 l32i a1, a2, ___xtensa_irq_bsa_t_a2_OFFSET
 
 #ifdef CONFIG_INSTRUMENT_THREAD_SWITCHING
-	call4 z_thread_mark_switched_in
+	CALL z_thread_mark_switched_in
 #endif
 	j _restore_context
 _switch_restore_pc:
@@ -408,9 +408,9 @@ _Level1RealVector:
 	beqz a0, _handle_tlb_miss_user
 	rsr.exccause a0
 #endif /* CONFIG_XTENSA_MMU */
-	bnei a0, EXCCAUSE_ALLOCA, _not_alloca
+	/*bnei a0, EXCCAUSE_ALLOCA, _not_alloca
 
-	j _xt_alloca_exc
+	j _xt_alloca_exc*/
 _not_alloca:
 	rsr a0, ZSR_A0SAVE
 	j _Level1Vector

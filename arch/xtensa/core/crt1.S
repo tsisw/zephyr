@@ -36,8 +36,8 @@
 # define ARG4	a5	/* 4th outgoing call argument */
 # define ARG5	a6	/* 5th outgoing call argument */
 #else
-# define CALL	call4
-# define CALLX	callx4
+# define CALL	call8
+# define CALLX	callx8
 # define ARG1	a6	/* 1st outgoing call argument */
 # define ARG2	a7	/* 2nd outgoing call argument */
 # define ARG3	a8	/* 3rd outgoing call argument */

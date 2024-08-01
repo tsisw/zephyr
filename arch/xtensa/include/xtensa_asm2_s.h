@@ -19,7 +19,7 @@
 #if defined(CONFIG_XTENSA_HIFI_SHARING)
 .extern _xtensa_hifi_save
 #endif
-
+#define CALL call8
 /*
  * SPILL_ALL_WINDOWS
  *
@@ -363,7 +363,7 @@
 	l32i a0, a1, ___xtensa_irq_bsa_t_a0_OFFSET
 	addi a1, a1, ___xtensa_irq_bsa_t_SIZEOF
 
-	call4 _xstack_call0_\@
+	CALL _xstack_call0_\@
 	mov a1, a3		/* restore original SP */
 	mov a2, a6		/* copy return value */
 	j _xstack_returned_\@
@@ -377,7 +377,7 @@ _xstack_call0_\@:
 	mov a1, a2
 	rsr.ZSR_EPS a2
 	wsr.ps a2
-	call4 _xstack_call1_\@
+	CALL _xstack_call1_\@
 	mov a2, a6		/* copy return value */
 	retw
 .align 4
@@ -550,10 +550,10 @@ _do_call_\@:
 	l32i a6, a6, ___cpu_t_current_OFFSET
 
 #ifdef CONFIG_XTENSA_MMU
-	call4 xtensa_swap_update_page_tables
+	CALL xtensa_swap_update_page_tables
 #endif
 #ifdef CONFIG_XTENSA_MPU
-	call4 xtensa_mpu_map_write
+	CALL xtensa_mpu_map_write
 #endif
 	l32i a1, a1, 0
 	l32i a0, a1, ___xtensa_irq_bsa_t_a0_OFFSET

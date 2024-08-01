@@ -104,7 +104,7 @@ _ResetHandler:
 	/* Read PWRSTAT */
 	movi	a2, XDM_MISC_PWRSTAT
 	/* Save area address - retained for later */
-	movi	a3, _xtos_pso_savearea
+	/*movi	a3, _xtos_pso_savearea*/
 	/* Signature for compare - retained for later */
 	movi	a5, CORE_STATE_SIGNATURE
 	 /* PWRSTAT value - retained for later */
@@ -130,7 +130,7 @@ _ResetHandler:
 
 .Lcold_start:
 
-#if XCHAL_HAVE_ICACHE_DYN_WAYS || XCHAL_HAVE_DCACHE_DYN_WAYS
+#if 0 /*XCHAL_HAVE_ICACHE_DYN_WAYS || XCHAL_HAVE_DCACHE_DYN_WAYS*/
 	/*
 	 * Enable and invalidate all ways of both caches. If there is no
 	 * dynamic way support then this write will have no effect.
@@ -343,11 +343,11 @@ _ResetHandler:
 
 	/* make shutoff routine return zero */
 	movi	a2, 0
-	movi	a3, _xtos_pso_savearea
+	/*movi	a3, _xtos_pso_savearea*/
 	/* Here, as below for _start, call0 is used as an unlimited-range
 	 * jump.
 	 */
-	call0	_xtos_core_restore_nw
+	/*call0	_xtos_core_restore_nw*/
 	/*  (does not return) */
 .Lcoldstart:
 #endif
