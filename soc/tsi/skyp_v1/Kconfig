@@ -39,6 +39,7 @@ config SOC_SKYP_TXE
 	select XTENSA
 	select XTENSA_HAL
 	select ARCH_SUPPORTS_COREDUMP	
+	select XTENSA_TENSILICA_NX
 
 # config MCUX_CORE_SUFFIX
 # 	default "_dsp" if SOC_SKYP_TXE		

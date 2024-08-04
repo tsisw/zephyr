@@ -1097,6 +1097,7 @@ function(zephyr_check_compiler_flag lang option check)
     LIMIT 1       # Read at most 1 byte ('0' or '1')
     )
 
+    set(key_value 1)
     set(${check} ${key_value} PARENT_SCOPE)
     return()
   endif()

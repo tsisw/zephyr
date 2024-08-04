@@ -286,6 +286,8 @@ static inline void *return_to(void *interrupted)
  * This may be unused depending on number of interrupt levels
  * supported by the SoC.
  */
+
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 #define DEF_INT_C_HANDLER(l)				\
 __unused void *xtensa_int##l##_c(void *interrupted_stack)	\
 {							   \
@@ -300,7 +302,19 @@ __unused void *xtensa_int##l##_c(void *interrupted_stack)	\
 	}							\
 	return return_to(interrupted_stack);		\
 }
-
+#else
+#define DEF_INT_C_HANDLER(l)                            \
+__unused void *xtensa_int##l##_c(void *interrupted_stack)       \
+{                                                          \
+        uint32_t irqs=0, intenable=0, m;                           \
+        usage_stop();                                      \
+        irqs &= intenable;                                      \
+        while ((m = _xtensa_handle_one_int##l(irqs))) {         \
+                irqs ^= m;                                      \
+        }                                                       \
+        return return_to(interrupted_stack);            \
+}
+#endif
 #if XCHAL_HAVE_NMI
 #define MAX_INTR_LEVEL XCHAL_NMILEVEL
 #elif XCHAL_HAVE_INTERRUPTS
@@ -480,9 +494,10 @@ skip_checks:
 		 *    resulting it being zero before switching to another
 		 *    thread.
 		 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 		__asm__ volatile("rsil %0, %1"
 				: "=r" (ignore) : "i"(XCHAL_EXCM_LEVEL));
-
+#endif
 		_current_cpu->nested = 1;
 	}
 

@@ -55,6 +55,7 @@
 #if !defined(XCHAL_INT20_LEVEL) || XCHAL_INT20_LEVEL != 1
 #error core-isa.h interrupt level does not match dispatcher!
 #endif
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 #if !defined(XCHAL_INT8_LEVEL) || XCHAL_INT8_LEVEL != 2
 #error core-isa.h interrupt level does not match dispatcher!
 #endif
@@ -79,7 +80,7 @@
 #if !defined(XCHAL_INT14_LEVEL) || XCHAL_INT14_LEVEL != 7
 #error core-isa.h interrupt level does not match dispatcher!
 #endif
-
+#endif
 static inline int _xtensa_handle_one_int0(unsigned int mask)
 {
 	return 0;

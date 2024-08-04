@@ -66,22 +66,25 @@ int z_arch_irq_connect_dynamic(unsigned int irq, unsigned int priority,
 
 void z_irq_spurious(const void *arg)
 {
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	int irqs, ie;
 
 	ARG_UNUSED(arg);
-
 	__asm__ volatile("rsr.interrupt %0" : "=r"(irqs));
 	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
 	LOG_ERR(" ** Spurious INTERRUPT(s) %p, INTENABLE = %p",
 		(void *)irqs, (void *)ie);
+#endif
 	xtensa_fatal_error(K_ERR_SPURIOUS_IRQ, NULL);
 }
 
 int xtensa_irq_is_enabled(unsigned int irq)
 {
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	uint32_t ie;
-
 	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
-
 	return (ie & (1 << irq)) != 0U;
+#else
+	return 0;
+#endif
 }

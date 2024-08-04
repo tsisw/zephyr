@@ -25,19 +25,24 @@ static unsigned int last_count;
 const int32_t z_sys_timer_irq_for_test = UTIL_CAT(XCHAL_TIMER,
 					 UTIL_CAT(CONFIG_XTENSA_TIMER_ID, _INTERRUPT));
 #endif
-
 static void set_ccompare(uint32_t val)
 {
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
 			  :: "r"(val));
+#endif
 }
 
 static uint32_t ccount(void)
 {
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	uint32_t val;
 
 	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
 	return val;
+#else
+	return 0;
+#endif
 }
 
 static void ccompare_isr(const void *arg)
@@ -128,6 +133,7 @@ static int sys_clock_driver_init(void)
 	irq_enable(TIMER_IRQ);
 	return 0;
 }
-
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 SYS_INIT(sys_clock_driver_init, PRE_KERNEL_2,
 	 CONFIG_SYSTEM_CLOCK_INIT_PRIORITY);
+#endif

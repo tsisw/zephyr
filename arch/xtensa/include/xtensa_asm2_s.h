@@ -373,9 +373,16 @@ _xstack_call0_\@:
 	 * rotation, but we want our own SP.  After that, we are
 	 * running in a valid frame, so re-enable interrupts.
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	entry a1, 16
+#else
+	entry a1, 32
+#endif
 	mov a1, a2
+
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsr.ZSR_EPS a2
+#endif
 	wsr.ps a2
 	CALL _xstack_call1_\@
 	mov a2, a6		/* copy return value */
@@ -461,14 +468,19 @@ _not_l1:
 	 * current value in our designated EPS register (which is
 	 * guaranteed unused across the call)
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
+#if XCHAL_HAVE_INTERRUPTS
 	rsil a0, 0xf
-
+#endif
+#endif
 	/* Since we are unmasking EXCM, we need to set RING bits to kernel
 	 * mode, otherwise we won't be able to run the exception handler in C.
 	 */
 	movi a3, ~(PS_EXCM_MASK) & ~(PS_RING_MASK)
 	and a0, a0, a3
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	wsr.ZSR_EPS a0
+#endif
 	wsr.ps a0
 	rsync
 
@@ -478,7 +490,9 @@ _not_l1:
 	 * entirely new area depending on whether we find a 1 in our
 	 * SR[off] macro argument.
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsr.ZSR_CPU a3
+#endif
 	l32i a0, a3, \NEST_OFF
 	beqz a0, _switch_stacks_\@
 
@@ -500,9 +514,10 @@ _do_call_\@:
 	 * execution) while we muck with the windows and decrement the nested
 	 * count.  The restore will unmask them correctly.
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsil a0, XCHAL_NUM_INTLEVELS
-
 	/* Decrement nest count */
+#endif
 	rsr.ZSR_CPU a3
 	l32i a0, a3, \NEST_OFF
 	addi a0, a0, -1
@@ -684,11 +699,14 @@ _not_triple_fault:
 	and a0, a0, a2
 	s32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
 .else
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsr.eps\LVL a0
+#endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
 .endif
-
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsr.epc\LVL a0
+#endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_pc_OFFSET
 
 	/* What's happening with this jump is that the L32R

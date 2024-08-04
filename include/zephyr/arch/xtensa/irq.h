@@ -24,11 +24,12 @@
  */
 static inline void z_xt_ints_on(unsigned int mask)
 {
+#ifdef XCHAL_HAVE_INTERRUPTS
 	int val;
-
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
 	val |= mask;
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
+#endif
 }
 
 
@@ -39,11 +40,13 @@ static inline void z_xt_ints_on(unsigned int mask)
  */
 static inline void z_xt_ints_off(unsigned int mask)
 {
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	int val;
 
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
 	val &= ~mask;
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
+#endif
 }
 
 
@@ -52,7 +55,7 @@ static inline void z_xt_ints_off(unsigned int mask)
  */
 static inline void z_xt_set_intset(unsigned int arg)
 {
-#if XCHAL_HAVE_INTERRUPTS
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	__asm__ volatile("wsr.intset %0; rsync" : : "r"(arg));
 #else
 	ARG_UNUSED(arg);
@@ -135,9 +138,13 @@ static ALWAYS_INLINE unsigned int arch_irq_lock(void)
 {
 	unsigned int key;
 
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	__asm__ volatile("rsil %0, %1"
 			 : "=r"(key) : "i"(XCHAL_EXCM_LEVEL) : "memory");
 	return key;
+#else
+	return 0;
+#endif
 }
 
 /** Implementation of @ref arch_irq_unlock. */

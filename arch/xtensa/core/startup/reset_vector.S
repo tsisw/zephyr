@@ -129,14 +129,15 @@ _ResetHandler:
 	j	.Lwarm_start
 
 .Lcold_start:
-
-#if 0 /*XCHAL_HAVE_ICACHE_DYN_WAYS || XCHAL_HAVE_DCACHE_DYN_WAYS*/
+#ifndef CONFIG_XTENSA_TENSILICA_NX
+#if XCHAL_HAVE_ICACHE_DYN_WAYS || XCHAL_HAVE_DCACHE_DYN_WAYS
 	/*
 	 * Enable and invalidate all ways of both caches. If there is no
 	 * dynamic way support then this write will have no effect.
 	 */
 	movi	a0, __memctl_default
 	wsr	a0, MEMCTL
+#endif
 #endif
 
 .Lwarm_start:
@@ -145,6 +146,7 @@ _ResetHandler:
 	/* a0 is always 0 in this code, used to initialize lots of things */
 	movi	a0, 0
 
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 /* technically this should be under !FULL_RESET, assuming hard reset */
 #if XCHAL_HAVE_INTERRUPTS
 	/* make sure that interrupts are shut off (*before* we lower
@@ -152,7 +154,7 @@ _ResetHandler:
 	 */
 	wsr	a0, INTENABLE
 #endif
-
+#endif
 #if !XCHAL_HAVE_FULL_RESET
 
 /* pre-LX2 cores only */
@@ -597,11 +599,12 @@ unpackdone:
 	 *  it is not VECBASE relative) to have the same memory error vector,
 	 *  yet each have their own handler and associated data save area.
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 #if XCHAL_HAVE_MEM_ECC_PARITY
 	movi	a4, _MemErrorHandler
 	wsr	a4, MESAVE
 #endif
-
+#endif
 
 	/*
 	 *  Initialize medium and high priority interrupt dispatchers:

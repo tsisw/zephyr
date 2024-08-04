@@ -33,6 +33,7 @@
  * Registers a2 and up may contain return values.
  */
 
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 #if XCHAL_HAVE_WINDOWED
 
     .section .WindowVectors.text, "ax"
@@ -240,4 +241,4 @@ _WindowUnderflow12:
     rfwu
 
 #endif /* XCHAL_HAVE_WINDOWED */
-
+#endif

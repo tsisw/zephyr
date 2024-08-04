@@ -13,7 +13,6 @@ set(SOC_LINKER_SCRIPT ${ZEPHYR_BASE}/include/zephyr/arch/arm/cortex_m/scripts/li
 endif()
 
 if(CONFIG_SOC_SKYP_TXE)
-
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR: TEST: ${CMAKE_CURRENT_SOURCE_DIR}")
 zephyr_include_directories(include)
 

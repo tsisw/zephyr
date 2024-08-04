@@ -32,7 +32,7 @@
 
 / {
 	model = "xt-sim";
-	compatible = "cdns,xtensa-sample-controller";
+	compatible = "cdns,xtensa-TENcore_nx_v02b_tie";
 
 	chosen {
 		// zephyr,sram = &sram0;
@@ -50,4 +50,4 @@
 
 &cpu0 {
 	clock-frequency = <10000000>;
-};
+};  

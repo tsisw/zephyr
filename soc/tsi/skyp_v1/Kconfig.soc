@@ -20,6 +20,13 @@ config SOC_SKYP_M85
 	help
 	  skyp_m85
 
+config XTENSA_TENSILICA_NX
+        bool
+        default y if SOC_SKYP_TXE
+        help
+          skyp_txe
+
+
 config SOC_SKYP_TXE
 	bool
 	select SOC_SKYP
@@ -28,7 +35,7 @@ config SOC_SKYP_TXE
 
 config SOC_TOOLCHAIN_NAME
 	string
-	default "sample_controller" if SOC_SKYP_TXE
+	default "TENcore_nx_v02b_tie" if SOC_SKYP_TXE
 
 config SOC_SERIES
 	default "skyp_v1" if SOC_SERIES_SKYP_V1

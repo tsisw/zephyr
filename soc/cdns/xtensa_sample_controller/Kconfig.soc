@@ -5,8 +5,8 @@ config SOC_XTENSA_SAMPLE_CONTROLLER
 	bool
 
 config SOC
-	default "xtensa_sample_controller" if SOC_XTENSA_SAMPLE_CONTROLLER
+	default "xtensa_TENcore_nx_v02b_tie" if SOC_XTENSA_SAMPLE_CONTROLLER
 
 config SOC_TOOLCHAIN_NAME
 	string
-	default "sample_controller" if SOC_XTENSA_SAMPLE_CONTROLLER
+	default "TENcore_nx_v02b_tie" if SOC_XTENSA_SAMPLE_CONTROLLER
