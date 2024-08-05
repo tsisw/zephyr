@@ -13,7 +13,7 @@ int main(void)
 #else
 	int a = 0, b = 10;
 	for (a = 0; a < 12; a++){
-	    if (a == b){
+	    if (a >= b){
 		break;
 	    }
 	}
