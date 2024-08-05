@@ -313,7 +313,9 @@ _ResetHandler:
 
 #if XCHAL_HAVE_INTERRUPTS && XCHAL_HAVE_DEBUG
 	/* lower PS.INTLEVEL here to make reset vector easier to debug */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	rsil	a2, 1
+#endif
 #endif
 
 	/* If either of the caches does not have dynamic way support, then
@@ -546,14 +548,18 @@ unpackdone:
 # if XCHAL_HAVE_WINDOWED && defined(__XTENSA_WINDOWED_ABI__)
 	/* Windowed register init, so we can call windowed code (eg. C code). */
 	movi	a1, 1
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	wsr	a1, WINDOWSTART
+#endif
 	/*
 	 *  The processor always clears WINDOWBASE at reset, so no need to
 	 *  clear it here.  It resets WINDOWSTART to 1 starting with LX2.0/X7.0
 	 *  (RB-2006.0).  However, assuming hard reset is not yet always
 	 *  practical, so do this anyway:
 	 */
+#ifndef CONFIG_XTENSA_TENSILICA_NX
 	wsr	a0, WINDOWBASE
+#endif
 	rsync
 	movi	a0, 0			 /* possibly a different a0, clear it */
 # endif
