@@ -23,6 +23,8 @@ manifest:
       url-base: https://github.com/zephyrproject-rtos
     - name: babblesim
       url-base: https://github.com/BabbleSim
+    - name: tsisw
+      url-base: git@github.com:tsisw
 
   group-filter: [-babblesim, -optional]
 
@@ -254,10 +256,12 @@ manifest:
       groups:
         - hal
     - name: hal_xtensa
-      revision: a2d658525b16c57bea8dd565f5bd5167e4b9f1ee
+      remote: tsisw
+      revision: ba4480a801e7f2952707522b2364bff21727190b
       path: modules/hal/xtensa
+      repo-path: hal_xtensa
       groups:
-        - hal
+        - tsisw
     - name: hostap
       repo-path: hostap
       path: modules/lib/hostap
@@ -315,7 +319,11 @@ manifest:
         - debug
     - name: picolibc
       path: modules/lib/picolibc
-      revision: 764ef4e401a8f4c6a86ab723533841f072885a5b
+      remote: tsisw
+      revision: 6a710566b74a16c4219d1cd431d1d648cdb808a1
+      repo-path: picolibc
+      groups:
+        - tsisw
     - name: segger
       revision: b011c45b585e097d95d9cf93edf4f2e01588d3cd
       path: modules/debug/segger
