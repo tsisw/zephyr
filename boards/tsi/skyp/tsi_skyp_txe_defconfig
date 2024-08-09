@@ -7,7 +7,7 @@
 # CONFIG_LOG=y
 
 # # no need for a "raw" binary zephyr/zephyr.bin in the build directory
-# CONFIG_BUILD_OUTPUT_BIN=y
+CONFIG_BUILD_OUTPUT_BIN=n
 # CONFIG_BUILD_OUTPUT_HEX=y
 
 # # enable uart driver
@@ -20,7 +20,7 @@
 # CONFIG_CONSOLE=y
 
 # # uart console (overrides remote proc console)
-# CONFIG_UART_CONSOLE=y
+CONFIG_UART_CONSOLE=y
 
 # # enable pin controller
 # CONFIG_PINCTRL=y

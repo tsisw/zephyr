@@ -31,14 +31,14 @@
 #include <mem.h>
 
 / {
-	model = "xt-sim";
+	model = "tsi-txe";
 	compatible = "cdns,xtensa-TENcore_nx_v02b_tie";
 
 	chosen {
-		// zephyr,sram = &sram0;
+		/*zephyr,sram = &sram0;*/
 		zephyr,sram = &sram_txe;
-		// zephyr,console = &uart4;
-		// zephyr,shell-uart = &uart4;
+		/*zephyr,console = &uart;*/
+		/*zephyr,shell-uart = &uart;*/
 	};
 	sram_txe: memory@60040000 {
 		device_type = "memory";
