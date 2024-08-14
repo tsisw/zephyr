@@ -30,6 +30,9 @@ static void set_ccompare(uint32_t val)
 #ifndef CONFIG_XTENSA_TENSILICA_NX
 	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
 			  :: "r"(val));
+#else
+	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
+			  :: "r"(val));
 #endif
 }
 
@@ -41,7 +44,11 @@ static uint32_t ccount(void)
 	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
 	return val;
 #else
-	return 0;
+	uint32_t val;
+
+	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
+	return val;
+	//return 0;
 #endif
 }
 

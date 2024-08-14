@@ -1,8 +1,7 @@
-// memctl_default.S  - Default startup value for MEMCTL register.
 
-// SPDX-License-Identifier: MIT
+// xtos-interrupt-clear.c -- Clear the specified interrupt number.
 
-// Copyright (c) 1998-2015 Cadence Design Systems, Inc.
+// Copyright (c) 2004-2018 Cadence Design Systems, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,24 +23,47 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include <xtensa/coreasm.h>
-#include <xtensa/config/system.h>
+#include <stdint.h>
+
+#include <xtensa/core-macros.h>
+#include "xtos-internal.h"
 
 
-// This file just contains this one symbol, used by the reset code.
-// It is here rather than in reset-vector.S because we want the symbol
-// to be external, so resolution is delayed until link time.
+// Force the XTOS interrupt table to be linked in if this function is called.
+__asm__ (".global   xtos_interrupt_table\n");
+
+
+//-----------------------------------------------------------------------------
+//  xtos_interrupt_clear
 //
-// To define your own value to override this default, redefine the
-// symbol __memctl_default to the desired value, e.g. -
+//  Clear the specified interrupt.
 //
-//    xt-xcc test.c -g -o test -Wl,--defsym=__memctl_default=0x08080808
+//  Parameters:
 //
+//  intnum                  The interrupt number (0 .. XCHAL_NUM_INTERRUPTS - 1)
+//                          to be cleared.
+//
+//  Returns:                0 on success, -1 on error.
+//-----------------------------------------------------------------------------
+int32_t
+xtos_interrupt_clear(uint32_t intnum)
+{
+#if XCHAL_HAVE_INTERRUPTS
 
-	.global	__memctl_default
-	.weak   __memctl_default
-	.equ    __memctl_default, XCHAL_CACHE_MEMCTL_DEFAULT
+    if (intnum >= (uint32_t) XCHAL_NUM_INTERRUPTS) {
+        // Invalid interrupt number
+        return -1;
+    }
 
-	.global	__memctl_default_post
-	.weak	__memctl_default_post
-	.equ	__memctl_default_post, XCHAL_MEMCTL_DEFAULT_POST
+    xthal_interrupt_clear(intnum);
+    return 0;
+
+#else
+
+    // Unsupported function
+    UNUSED(intnum);
+    return -1;
+
+#endif // XCHAL_HAVE_INTERRUPTS
+}
+

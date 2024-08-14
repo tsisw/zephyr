@@ -26,6 +26,12 @@ config XTENSA_TENSILICA_NX
         help
           skyp_txe
 
+config XCHAL_HAVE_XEA3
+        bool
+        default y if SOC_SKYP_TXE
+        help
+          skyp_txe		  
+
 
 config SOC_SKYP_TXE
 	bool

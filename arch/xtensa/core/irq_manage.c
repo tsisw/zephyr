@@ -64,17 +64,55 @@ int z_arch_irq_connect_dynamic(unsigned int irq, unsigned int priority,
 #endif /* !CONFIG_MULTI_LEVEL_INTERRUPTS */
 #endif /* CONFIG_DYNAMIC_INTERRUPTS */
 
+// #define CLIC_INTIE_OFFSET(b,i)                  ((b) + UINT32_C(0x001) + UINT32_C(4)*(i))
+// #define MCLICINTIE(i)                           (CLIC_INTIE_OFFSET(UINT32_C(0x1000),i))//MMIO_M_CLIC_BASE_ADDR)
+
+// static inline uint8_t xthal_mmio_ld8(uint32_t addr)
+// {
+//   uint8_t rv;
+//   __asm__ volatile ("_lb %0,%1,0" : "=r" (rv) : "r" (addr));
+//   return rv;
+// }
+
+
+/*
+ * xthal_interrupt_enabled
+ *
+ * Returns 1 if specified interrupt is enabled, else 0.
+ */
+//static inline unsigned int xthal_interrupt_enabled(uint32_t intnum)
+// static inline unsigned int xthal_interrupt_enabled(uint32_t intnum)
+// {
+//     return xthal_mmio_ld8(MCLICINTIE(intnum));
+// }
+
+/* Interrupt controller register addresses (ERI) */
+
+#define	IC_REGBASE			UINT32_C(0x00120000)
+#define	INTCTRL_ENABLE			UINT32_C(0x1)
+/* Per-interrupt control/status registers */
+
+#define	IC_CTRLBASE			(IC_REGBASE + UINT32_C(0x2000))
+#define	IC_CTRLREG(num)			(IC_CTRLBASE + (UINT32_C(4) * (num)))
+
+inline uint32_t XTHAL_RER(uint32_t reg) // Not supportable on RNX, not documented, but used internally. (Deprecate?)
+{
+    //return XT_RER(reg);
+	return (reg);
+}
+
 void z_irq_spurious(const void *arg)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+ #ifndef CONFIG_XTENSA_TENSILICA_NX
 	int irqs, ie;
 
 	ARG_UNUSED(arg);
-	__asm__ volatile("rsr.interrupt %0" : "=r"(irqs));
-	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
+	 __asm__ volatile("rsr.interrupt %0" : "=r"(irqs));
+	 __asm__ volatile("rsr.intenable %0" : "=r"(ie));
+
 	LOG_ERR(" ** Spurious INTERRUPT(s) %p, INTENABLE = %p",
 		(void *)irqs, (void *)ie);
-#endif
+ #endif
 	xtensa_fatal_error(K_ERR_SPURIOUS_IRQ, NULL);
 }
 
@@ -83,8 +121,17 @@ int xtensa_irq_is_enabled(unsigned int irq)
 #ifndef CONFIG_XTENSA_TENSILICA_NX
 	uint32_t ie;
 	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
+	// __asm__ volatile("rsr.intenable_alt %0" : "=r"(ie));
 	return (ie & (1 << irq)) != 0U;
 #else
+	//uint32_t ie;
+	//ie = xthal_interrupt_enabled(irq);
+	//return (ie & (1 << irq)) != 0U;
+	if (irq < ((uint32_t) XCHAL_NUM_INTERRUPTS))
+    {
+        return ((((uint32_t) XTHAL_RER(IC_CTRLREG(irq))) & INTCTRL_ENABLE)
+                != 0U) ? 1U : 0U;
+    }
 	return 0;
 #endif
 }

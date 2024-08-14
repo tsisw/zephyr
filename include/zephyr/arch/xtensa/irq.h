@@ -31,6 +31,19 @@ static inline void z_xt_ints_on(unsigned int mask)
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
 #endif
 }
+#define	PS_DI_MASK			0x00000008
+#define	PS_DI				PS_DI_MASK
+
+/* Interrupt controller register addresses (ERI) */
+
+#define	IC_REGBASE			UINT32_C(0x00120000)
+#define	INTCTRL_ENABLE			UINT32_C(0x1)
+#define	INTCTRL_ENABLE_WRITE		UINT32_C(0x00000100)
+/* Per-interrupt control/status registers */
+
+#define	IC_CTRLBASE			(IC_REGBASE + UINT32_C(0x2000))
+#define	IC_CTRLREG(num)			(IC_CTRLBASE + (UINT32_C(4) * (num)))
+
 
 
 /*
@@ -40,15 +53,24 @@ static inline void z_xt_ints_on(unsigned int mask)
  */
 static inline void z_xt_ints_off(unsigned int mask)
 {
+#pragma no_reorder
 #ifndef CONFIG_XTENSA_TENSILICA_NX
 	int val;
 
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
 	val &= ~mask;
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
+#else
+	 uint32_t val = PS_DI;
+     //XT_XPS(val, val);
+     //return val;	
 #endif
 }
-
+inline void XTHAL_WER(uint32_t reg, uint32_t val) // Not supportable on RNX, not documented, but used internally. (Deprecate?)
+{
+    /* NOTE That the argument order is reversed! */
+    //XT_WER(val, reg);
+}
 
 /*
  * Call this function to set the specified (s/w) interrupt.
@@ -58,7 +80,15 @@ static inline void z_xt_set_intset(unsigned int arg)
 #ifndef CONFIG_XTENSA_TENSILICA_NX
 	__asm__ volatile("wsr.intset %0; rsync" : : "r"(arg));
 #else
-	ARG_UNUSED(arg);
+	if (arg < ((uint32_t) XCHAL_NUM_INTERRUPTS))
+    {
+        uint32_t addr = IC_CTRLREG(arg);
+        uint32_t rval = (INTCTRL_ENABLE_WRITE | INTCTRL_ENABLE);
+
+        // Set the 'enable' bit and the 'write-enable' bit for it.
+        XTHAL_WER(addr, rval);
+    }
+	//ARG_UNUSED(arg);
 #endif
 }
 
