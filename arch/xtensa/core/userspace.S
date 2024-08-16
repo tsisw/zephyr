@@ -369,7 +369,7 @@ xtensa_userspace_enter:
 #ifndef XCHAL_HAVE_XEA3
 	wsr a0, EPS2
 #else
-	wsr.EXCAUSE a0
+	wsr.EXCCAUSE a0
 #endif
 
 	/* Wipe out a0 (thre is no return from this function */
@@ -378,5 +378,5 @@ xtensa_userspace_enter:
 #ifndef XCHAL_HAVE_XEA3
 	rfi 2
 #else
-	ret 2
+	ret 
 #endif
