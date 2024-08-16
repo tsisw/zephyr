@@ -23,7 +23,7 @@
 FPGAIO_INIT(2);
 #else
 #include <mpu.h>
-#ifdef XTENSA_MPU
+#ifdef CONFIG_XTENSA_MPU
 const int xtensa_soc_mpu_ranges_num = 0;
 
 const struct xtensa_mpu_range xtensa_soc_mpu_ranges[] = {
