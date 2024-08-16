@@ -43,12 +43,12 @@ xtensa_save_high_regs:
 	 * by duplicating the bits twice and shifting down by WINDOWBASE
 	 * bits.  Now the LSB is the register quad at WINDOWBASE.
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr a2, WINDOWSTART
 #endif
 	slli a3, a2, (XCHAL_NUM_AREGS / 4)
 	or a2, a2, a3
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr a3, WINDOWBASE
 #endif
 	ssr a3
@@ -157,11 +157,11 @@ _restore_context:
 	call0 xtensa_restore_high_regs
 
 	l32i a0, a1, ___xtensa_irq_bsa_t_pc_OFFSET
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	wsr a0, ZSR_EPC
 #endif
 	l32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	wsr a0, ZSR_EPS
 #endif
 
@@ -200,7 +200,7 @@ _restore_context:
 	l32i a3, a1, ___xtensa_irq_bsa_t_a3_OFFSET
 	addi a1, a1, ___xtensa_irq_bsa_t_SIZEOF
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rfi ZSR_RFI_LEVEL
 #endif
 /*
@@ -214,7 +214,7 @@ _restore_context:
 .global xtensa_arch_except_epc
 .align 4
 xtensa_arch_except:
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	entry a1, 16
 #else
 	entry a1, 32
@@ -232,7 +232,7 @@ xtensa_arch_except_epc:
 .global xtensa_arch_kernel_oops_epc
 .align 4
 xtensa_arch_kernel_oops:
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	entry a1, 16
 #else
 	entry a1, 32
@@ -250,7 +250,7 @@ xtensa_arch_kernel_oops_epc:
 .global xtensa_switch
 .align 4
 xtensa_switch:
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	entry a1, 16
 #else
 	entry a1, 32
@@ -436,7 +436,7 @@ _Level1RealVector:
 	j _xt_alloca_exc*/
 _not_alloca:
 	rsr a0, ZSR_A0SAVE
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
 #endif
 #ifdef CONFIG_XTENSA_MMU
@@ -485,7 +485,7 @@ _KernelExceptionVector:
 	beqz a0, _handle_tlb_miss_kernel
 	rsr a0, ZSR_A0SAVE
 #endif
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
 #endif
 #ifdef CONFIG_XTENSA_MMU
@@ -526,7 +526,7 @@ _DoubleExceptionVector:
 	wsr a0, ZSR_DEPC_SAVE
 
 	rsr a0, ZSR_DBLEXC
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
 #endif
 _TripleFault:

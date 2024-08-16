@@ -27,7 +27,7 @@ const int32_t z_sys_timer_irq_for_test = UTIL_CAT(XCHAL_TIMER,
 #endif
 static void set_ccompare(uint32_t val)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
 			  :: "r"(val));
 #else
@@ -38,7 +38,7 @@ static void set_ccompare(uint32_t val)
 
 static uint32_t ccount(void)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	uint32_t val;
 
 	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
@@ -140,7 +140,7 @@ static int sys_clock_driver_init(void)
 	irq_enable(TIMER_IRQ);
 	return 0;
 }
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 SYS_INIT(sys_clock_driver_init, PRE_KERNEL_2,
 	 CONFIG_SYSTEM_CLOCK_INIT_PRIORITY);
 #endif

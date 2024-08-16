@@ -55,7 +55,7 @@
 #if !defined(XCHAL_INT20_LEVEL) || XCHAL_INT20_LEVEL != 1
 #error core-isa.h interrupt level does not match dispatcher!
 #endif
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 #if !defined(XCHAL_INT8_LEVEL) || XCHAL_INT8_LEVEL != 2
 #error core-isa.h interrupt level does not match dispatcher!
 #endif

@@ -8,7 +8,7 @@
 
 int main(void)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	printf("Hello World! %s\n", CONFIG_BOARD_TARGET);
 #else
 	int a = 0, b = 10;

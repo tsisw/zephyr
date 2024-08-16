@@ -12,3 +12,18 @@ config NUM_IRQS
 
 endif # SOC_SERIES_SKYP_V1
 
+if SOC_SKYP_TXE
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+        default 200000000
+
+config SYS_CLOCK_TICKS_PER_SEC
+        default 50000
+
+config XTENSA_TIMER
+        default y
+
+config KERNEL_ENTRY
+        default "__start"
+
+endif

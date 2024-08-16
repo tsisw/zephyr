@@ -54,7 +54,7 @@ static inline void z_xt_ints_on(unsigned int mask)
 static inline void z_xt_ints_off(unsigned int mask)
 {
 #pragma no_reorder
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	int val;
 
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
@@ -77,7 +77,7 @@ inline void XTHAL_WER(uint32_t reg, uint32_t val) // Not supportable on RNX, not
  */
 static inline void z_xt_set_intset(unsigned int arg)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	__asm__ volatile("wsr.intset %0; rsync" : : "r"(arg));
 #else
 	if (arg < ((uint32_t) XCHAL_NUM_INTERRUPTS))
@@ -168,7 +168,7 @@ static ALWAYS_INLINE unsigned int arch_irq_lock(void)
 {
 	unsigned int key;
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	__asm__ volatile("rsil %0, %1"
 			 : "=r"(key) : "i"(XCHAL_EXCM_LEVEL) : "memory");
 	return key;

@@ -373,14 +373,14 @@ _xstack_call0_\@:
 	 * rotation, but we want our own SP.  After that, we are
 	 * running in a valid frame, so re-enable interrupts.
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	entry a1, 16
 #else
 	entry a1, 32
 #endif
 	mov a1, a2
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr.ZSR_EPS a2
 #endif
 	wsr.ps a2
@@ -468,7 +468,7 @@ _not_l1:
 	 * current value in our designated EPS register (which is
 	 * guaranteed unused across the call)
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 #if XCHAL_HAVE_INTERRUPTS
 	rsil a0, 0xf
 #endif
@@ -478,7 +478,7 @@ _not_l1:
 	 */
 	movi a3, ~(PS_EXCM_MASK) & ~(PS_RING_MASK)
 	and a0, a0, a3
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	wsr.ZSR_EPS a0
 #endif
 	wsr.ps a0
@@ -490,7 +490,7 @@ _not_l1:
 	 * entirely new area depending on whether we find a 1 in our
 	 * SR[off] macro argument.
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr.ZSR_CPU a3
 #endif
 	l32i a0, a3, \NEST_OFF
@@ -514,7 +514,7 @@ _do_call_\@:
 	 * execution) while we muck with the windows and decrement the nested
 	 * count.  The restore will unmask them correctly.
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsil a0, XCHAL_NUM_INTLEVELS
 	/* Decrement nest count */
 #endif
@@ -699,12 +699,12 @@ _not_triple_fault:
 	and a0, a0, a2
 	s32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
 .else
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr.eps\LVL a0
 #endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
 .endif
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsr.epc\LVL a0
 #endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_pc_OFFSET

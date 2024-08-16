@@ -103,7 +103,7 @@ inline uint32_t XTHAL_RER(uint32_t reg) // Not supportable on RNX, not documente
 
 void z_irq_spurious(const void *arg)
 {
- #ifndef CONFIG_XTENSA_TENSILICA_NX
+ #ifndef XCHAL_HAVE_XEA3
 	int irqs, ie;
 
 	ARG_UNUSED(arg);
@@ -118,7 +118,7 @@ void z_irq_spurious(const void *arg)
 
 int xtensa_irq_is_enabled(unsigned int irq)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	uint32_t ie;
 	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
 	// __asm__ volatile("rsr.intenable_alt %0" : "=r"(ie));

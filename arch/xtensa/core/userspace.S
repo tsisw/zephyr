@@ -68,7 +68,11 @@ _not_checking_user_context:
 	movi a3, ~PS_OWB_MASK
 	and a2, a2, a3
 	s32i a2, a0, ___xtensa_irq_bsa_t_ps_OFFSET
+#ifndef XCHAL_HAVE_XEA3
 	rsr.epc1 a2
+#else
+	rsr.epc a2
+#endif
 	s32i a2, a0, ___xtensa_irq_bsa_t_pc_OFFSET
 
 #if XCHAL_HAVE_NMI
@@ -188,9 +192,11 @@ _id_ok:
 	movi a0, PS_WOE|PS_CALLINC(0)|PS_UM|PS_INTLEVEL(0)
 	wsr.ps a0
 	rsync
-
+#ifndef XCHAL_HAVE_XEA3
 	callx4 a2
-
+#else
+	callx8 a2
+#endif
 	/* Going back before stack frame pointer on stack to
 	 * actual the stack frame. So restoration of registers
 	 * can be done properly when finishing syscalls.
@@ -242,8 +248,11 @@ _syscall_returned:
 	wsr.ps a3
 
 	l32i a3, a1, ___xtensa_irq_bsa_t_pc_OFFSET
+#ifndef XCHAL_HAVE_XEA3
 	wsr.epc1 a3
-
+#else
+	wsr.epc a3
+#endif
 	l32i a0, a1, ___xtensa_irq_bsa_t_a0_OFFSET
 	l32i a2, a1, ___xtensa_irq_bsa_t_a2_OFFSET
 	l32i a3, a1, ___xtensa_irq_bsa_t_a3_OFFSET
@@ -251,7 +260,11 @@ _syscall_returned:
 	l32i a1, a1, ___xtensa_irq_bsa_t_scratch_OFFSET
 	rsync
 
+#ifndef XCHAL_HAVE_XEA3
 	rfe
+#else
+	ret
+#endif
 
 _bad_syscall:
 	movi a2, K_SYSCALL_BAD
@@ -274,7 +287,11 @@ xtensa_userspace_enter:
 	 * do the rotation, but we are going to set our own
 	 * stack.
 	 */
+#ifndef XCHAL_HAVE_XEA3
 	entry a1, 16
+#else
+	entry a1, 32
+#endif
 
 	SPILL_ALL_WINDOWS
 
@@ -332,8 +349,11 @@ xtensa_userspace_enter:
 	l32i a1, a1, 4
 
 	movi a0, z_thread_entry
+#ifndef XCHAL_HAVE_XEA3
 	wsr.epc2 a0
-
+#else
+	wsr.epc a0
+#endif
 	/* Configuring PS register.
 	 * We have to set callinc as well, since the called
 	 * function will do "entry"
@@ -346,9 +366,17 @@ xtensa_userspace_enter:
 	movi a0, PS_WOE|PS_CALLINC(1)|PS_UM|PS_RING(1)
 #endif
 
+#ifndef XCHAL_HAVE_XEA3
 	wsr a0, EPS2
+#else
+	wsr.EXCAUSE a0
+#endif
 
 	/* Wipe out a0 (thre is no return from this function */
 	movi a0, 0
 
+#ifndef XCHAL_HAVE_XEA3
 	rfi 2
+#else
+	ret 2
+#endif

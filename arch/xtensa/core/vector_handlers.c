@@ -287,7 +287,7 @@ static inline void *return_to(void *interrupted)
  * supported by the SoC.
  */
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 #define DEF_INT_C_HANDLER(l)				\
 __unused void *xtensa_int##l##_c(void *interrupted_stack)	\
 {							   \
@@ -494,7 +494,7 @@ skip_checks:
 		 *    resulting it being zero before switching to another
 		 *    thread.
 		 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 		__asm__ volatile("rsil %0, %1"
 				: "=r" (ignore) : "i"(XCHAL_EXCM_LEVEL));
 #endif

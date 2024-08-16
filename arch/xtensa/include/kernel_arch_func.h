@@ -82,7 +82,7 @@ void xtensa_switch(void *switch_to, void **switched_from);
 
 static ALWAYS_INLINE void arch_switch(void *switch_to, void **switched_from)
 {
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	return xtensa_switch(switch_to, switched_from);
 #endif
 }

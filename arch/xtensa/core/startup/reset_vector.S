@@ -14,7 +14,8 @@
 #include <xtensa/config/system.h>  /* for XSHAL_USE_ABSOLUTE_LITERALS only */
 #include <xtensa/xtruntime-core-state.h>
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#if 1
+/*#ifndef XCHAL_HAVE_XEA3*/
 /*
  * The following reset vector avoids initializing certain registers already
  * initialized by processor reset.  But it does initialize some of them
@@ -131,7 +132,7 @@ _ResetHandler:
 	j	.Lwarm_start
 
 .Lcold_start:
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 #if XCHAL_HAVE_ICACHE_DYN_WAYS || XCHAL_HAVE_DCACHE_DYN_WAYS
 	/*
 	 * Enable and invalidate all ways of both caches. If there is no
@@ -148,7 +149,7 @@ _ResetHandler:
 	/* a0 is always 0 in this code, used to initialize lots of things */
 	movi	a0, 0
 
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 /* technically this should be under !FULL_RESET, assuming hard reset */
 #if XCHAL_HAVE_INTERRUPTS
 	/* make sure that interrupts are shut off (*before* we lower
@@ -317,7 +318,7 @@ _ResetHandler:
 
 #if XCHAL_HAVE_INTERRUPTS && XCHAL_HAVE_DEBUG
 	/* lower PS.INTLEVEL here to make reset vector easier to debug */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	rsil	a2, 1
 	// Save the current PS register
     //rsr.ps a0
@@ -557,7 +558,7 @@ unpackdone:
 # if XCHAL_HAVE_WINDOWED && defined(__XTENSA_WINDOWED_ABI__)
 	/* Windowed register init, so we can call windowed code (eg. C code). */
 	movi	a1, 1
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	wsr	a1, WINDOWSTART
 #endif
 	/*
@@ -566,7 +567,7 @@ unpackdone:
 	 *  (RB-2006.0).  However, assuming hard reset is not yet always
 	 *  practical, so do this anyway:
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	wsr	a0, WINDOWBASE
 #endif
 	rsync
@@ -614,7 +615,7 @@ unpackdone:
 	 *  it is not VECBASE relative) to have the same memory error vector,
 	 *  yet each have their own handler and associated data save area.
 	 */
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 #if XCHAL_HAVE_MEM_ECC_PARITY
 	movi	a4, _MemErrorHandler
 	wsr	a4, MESAVE
@@ -849,7 +850,7 @@ _ResetHandler:
 
 #if XCHAL_HAVE_VECBASE
 	// Vectors are relocatable, set up vecbase to point to dispatch code.
-#ifndef CONFIG_XTENSA_TENSILICA_NX
+#ifndef XCHAL_HAVE_XEA3
 	movi	a2, _DispatchVector		// Start of dispatch code
 #endif
 	wsr.vecbase	a2
@@ -866,7 +867,7 @@ _ResetHandler:
 #if XCHAL_HAVE_DCACHE_DYN_WAYS || XCHAL_HAVE_CME_DOWNGRADES
 	dcache_reset_data	a2, a3, a4
 //#else
-//	dcache_reset	a2, a3, a4 /* CONFIG_XTENSA_TENSILICA_NX*/
+//	dcache_reset	a2, a3, a4 /* XCHAL_HAVE_XEA3*/
 #endif
 
 #if XCHAL_HAVE_L2_CACHE
