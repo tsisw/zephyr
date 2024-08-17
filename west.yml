@@ -257,7 +257,7 @@ manifest:
         - hal
     - name: hal_xtensa
       remote: tsisw
-      revision: 758768dc53d83f96455b05cc5ebba6ee039b791a
+      revision: c90ed728a8a96f8c77af7206183880824a4ff42a
       path: modules/hal/xtensa
       repo-path: hal_xtensa
       groups:

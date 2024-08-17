@@ -14,8 +14,8 @@
 #include <xtensa/config/system.h>  /* for XSHAL_USE_ABSOLUTE_LITERALS only */
 #include <xtensa/xtruntime-core-state.h>
 
-#if 1
-/*#ifndef XCHAL_HAVE_XEA3*/
+//#if 1
+#ifndef XCHAL_HAVE_XEA3
 /*
  * The following reset vector avoids initializing certain registers already
  * initialized by processor reset.  But it does initialize some of them
@@ -866,8 +866,8 @@ _ResetHandler:
 
 #if XCHAL_HAVE_DCACHE_DYN_WAYS || XCHAL_HAVE_CME_DOWNGRADES
 	dcache_reset_data	a2, a3, a4
-//#else
-//	dcache_reset	a2, a3, a4 /* XCHAL_HAVE_XEA3*/
+#else
+	dcache_reset	a2, a3, a4 
 #endif
 
 #if XCHAL_HAVE_L2_CACHE
