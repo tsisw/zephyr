@@ -24,12 +24,10 @@
  */
 static inline void z_xt_ints_on(unsigned int mask)
 {
-#ifdef XCHAL_HAVE_INTERRUPTS
 	int val;
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
 	val |= mask;
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
-#endif
 }
 #define	PS_DI_MASK			0x00000008
 #define	PS_DI				PS_DI_MASK
@@ -53,7 +51,6 @@ static inline void z_xt_ints_on(unsigned int mask)
  */
 static inline void z_xt_ints_off(unsigned int mask)
 {
-#pragma no_reorder
 	int val;
 
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
@@ -71,7 +68,7 @@ inline void XTHAL_WER(uint32_t reg, uint32_t val) // Not supportable on RNX, not
  */
 static inline void z_xt_set_intset(unsigned int arg)
 {
-#ifdef XCHAL_HAVE_INTERRUPTS
+#if XCHAL_HAVE_INTERRUPTS
 	__asm__ volatile("wsr.intset %0; rsync" : : "r"(arg));
 	ARG_UNUSED(arg);
 #endif

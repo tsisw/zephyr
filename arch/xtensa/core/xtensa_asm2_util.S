@@ -96,6 +96,7 @@ _high_gpr_spill_done:
 	s32i a3, a1, 0
 
 	ret
+
 /*
  * xtensa_restore_high_regs
  *
@@ -176,7 +177,6 @@ _restore_context:
 	wsr a0, PS
 #endif
 
-#if 1
 #if XCHAL_HAVE_FP && defined(CONFIG_CPU_HAS_FPU) && defined(CONFIG_FPU_SHARING)
 	FPU_REG_RESTORE
 #endif
@@ -212,7 +212,6 @@ _restore_context:
 	l32i a3, a1, ___xtensa_irq_bsa_t_a3_OFFSET
 	addi a1, a1, ___xtensa_irq_bsa_t_SIZEOF
 
-#endif
 #ifndef XCHAL_HAVE_XEA3
 	rfi ZSR_RFI_LEVEL
 #else

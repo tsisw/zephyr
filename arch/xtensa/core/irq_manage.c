@@ -107,8 +107,9 @@ void z_irq_spurious(const void *arg)
 	int irqs, ie;
 
 	ARG_UNUSED(arg);
-	 __asm__ volatile("rsr.interrupt %0" : "=r"(irqs));
-	 __asm__ volatile("rsr.intenable %0" : "=r"(ie));
+
+	__asm__ volatile("rsr.interrupt %0" : "=r"(irqs));
+	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
 
 	LOG_ERR(" ** Spurious INTERRUPT(s) %p, INTENABLE = %p",
 		(void *)irqs, (void *)ie);
@@ -121,17 +122,17 @@ int xtensa_irq_is_enabled(unsigned int irq)
 #ifndef XCHAL_HAVE_XEA3
 	uint32_t ie;
 	__asm__ volatile("rsr.intenable %0" : "=r"(ie));
-	// __asm__ volatile("rsr.intenable_alt %0" : "=r"(ie));
+	__asm__ volatile("rsr.intenable_alt %0" : "=r"(ie));
 	return (ie & (1 << irq)) != 0U;
 #else
 	//uint32_t ie;
 	//ie = xthal_interrupt_enabled(irq);
 	//return (ie & (1 << irq)) != 0U;
 	if (irq < ((uint32_t) XCHAL_NUM_INTERRUPTS))
-    {
-        return ((((uint32_t) XTHAL_RER(IC_CTRLREG(irq))) & INTCTRL_ENABLE)
-                != 0U) ? 1U : 0U;
-    }
+	{
+		return ((((uint32_t) XTHAL_RER(IC_CTRLREG(irq))) & INTCTRL_ENABLE)
+				!= 0U) ? 1U : 0U;
+	}
 	return 0;
 #endif
 }

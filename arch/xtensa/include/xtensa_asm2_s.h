@@ -522,6 +522,7 @@ _do_call_\@:
 	 */
 #ifndef XCHAL_HAVE_XEA3
 	rsil a0, XCHAL_NUM_INTLEVELS
+
 	/* Decrement nest count */
 #else
 	rsr.ps a0
