@@ -26,4 +26,6 @@ config XTENSA_TIMER
 config KERNEL_ENTRY
         default "__start"
 
+config PRIVILEGED_STACK_SIZE
+	default 2048
 endif

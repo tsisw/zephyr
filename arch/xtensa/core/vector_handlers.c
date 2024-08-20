@@ -497,6 +497,8 @@ skip_checks:
 #ifndef XCHAL_HAVE_XEA3
 		__asm__ volatile("rsil %0, %1"
 				: "=r" (ignore) : "i"(XCHAL_EXCM_LEVEL));
+#else
+		__asm__ volatile("rsr.ps %0" : "=r" (ignore) : "i"(XCHAL_EXCM_LEVEL));
 #endif
 		_current_cpu->nested = 1;
 	}

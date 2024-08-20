@@ -14,8 +14,8 @@
 #include <xtensa/config/system.h>  /* for XSHAL_USE_ABSOLUTE_LITERALS only */
 #include <xtensa/xtruntime-core-state.h>
 
-//#if 1
-#ifndef XCHAL_HAVE_XEA3
+#if 1
+//#ifndef XCHAL_HAVE_XEA3
 /*
  * The following reset vector avoids initializing certain registers already
  * initialized by processor reset.  But it does initialize some of them
@@ -325,6 +325,13 @@ _ResetHandler:
 	// Disable interrupts up to level 1
     //movi a2, 0x00000200   // Set INTLEVEL to 1 (bit[7:6] in PS)
     //wsr.ps a2
+#else
+    rsr.ps    a2
+        // Save the current PS register
+    //rsr.ps a0
+    //Disable interrupts up to level 1
+    movi a2, 0x00000200   // Set INTLEVEL to 1 (bit[7:6] in PS)
+    wsr.ps a2
 #endif
 #endif
 

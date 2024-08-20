@@ -27,29 +27,16 @@ const int32_t z_sys_timer_irq_for_test = UTIL_CAT(XCHAL_TIMER,
 #endif
 static void set_ccompare(uint32_t val)
 {
-#ifndef XCHAL_HAVE_XEA3
 	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
 			  :: "r"(val));
-#else
-	__asm__ volatile ("wsr.CCOMPARE" STRINGIFY(CONFIG_XTENSA_TIMER_ID) " %0"
-			  :: "r"(val));
-#endif
 }
 
 static uint32_t ccount(void)
 {
-#ifndef XCHAL_HAVE_XEA3
 	uint32_t val;
 
 	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
 	return val;
-#else
-	uint32_t val;
-
-	__asm__ volatile ("rsr.CCOUNT %0" : "=r"(val));
-	return val;
-	//return 0;
-#endif
 }
 
 static void ccompare_isr(const void *arg)

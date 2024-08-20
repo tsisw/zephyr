@@ -45,11 +45,15 @@ xtensa_save_high_regs:
 	 */
 #ifndef XCHAL_HAVE_XEA3
 	rsr a2, WINDOWSTART
+#else
+//	rsr a2, 73
 #endif
 	slli a3, a2, (XCHAL_NUM_AREGS / 4)
 	or a2, a2, a3
 #ifndef XCHAL_HAVE_XEA3
 	rsr a3, WINDOWBASE
+#else
+	//rsr a3, WINDOWBASE
 #endif
 	ssr a3
 	srl a2, a2
@@ -157,14 +161,22 @@ _restore_context:
 	call0 xtensa_restore_high_regs
 
 	l32i a0, a1, ___xtensa_irq_bsa_t_pc_OFFSET
+
 #ifndef XCHAL_HAVE_XEA3
 	wsr a0, ZSR_EPC
-#endif
-	l32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
-#ifndef XCHAL_HAVE_XEA3
-	wsr a0, ZSR_EPS
+#else
+	wsr a0, EPC
 #endif
 
+	l32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
+
+#ifndef XCHAL_HAVE_XEA3
+	wsr a0, ZSR_EPS
+#else
+	wsr a0, PS
+#endif
+
+#if 1
 #if XCHAL_HAVE_FP && defined(CONFIG_CPU_HAS_FPU) && defined(CONFIG_FPU_SHARING)
 	FPU_REG_RESTORE
 #endif
@@ -200,9 +212,13 @@ _restore_context:
 	l32i a3, a1, ___xtensa_irq_bsa_t_a3_OFFSET
 	addi a1, a1, ___xtensa_irq_bsa_t_SIZEOF
 
+#endif
 #ifndef XCHAL_HAVE_XEA3
 	rfi ZSR_RFI_LEVEL
+#else
+        retw
 #endif
+
 /*
  * void xtensa_arch_except(int reason_p);
  *
@@ -431,14 +447,12 @@ _Level1RealVector:
 	beqz a0, _handle_tlb_miss_user
 	rsr.exccause a0
 #endif /* CONFIG_XTENSA_MMU */
-	/*bnei a0, EXCCAUSE_ALLOCA, _not_alloca
+	bnei a0, EXCCAUSE_ALLOCA, _not_alloca
 
-	j _xt_alloca_exc*/
+	j _xt_alloca_exc
 _not_alloca:
 	rsr a0, ZSR_A0SAVE
-#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
-#endif
 #ifdef CONFIG_XTENSA_MMU
 _handle_tlb_miss_user:
 	/**
@@ -485,9 +499,7 @@ _KernelExceptionVector:
 	beqz a0, _handle_tlb_miss_kernel
 	rsr a0, ZSR_A0SAVE
 #endif
-#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
-#endif
 #ifdef CONFIG_XTENSA_MMU
 _handle_tlb_miss_kernel:
 	/* The TLB miss handling is used only during xtensa_mmu_init()
@@ -526,9 +538,7 @@ _DoubleExceptionVector:
 	wsr a0, ZSR_DEPC_SAVE
 
 	rsr a0, ZSR_DBLEXC
-#ifndef XCHAL_HAVE_XEA3
 	j _Level1Vector
-#endif
 _TripleFault:
 #endif /* CONFIG_XTENSA_MMU */
 

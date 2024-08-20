@@ -382,6 +382,8 @@ _xstack_call0_\@:
 
 #ifndef XCHAL_HAVE_XEA3
 	rsr.ZSR_EPS a2
+#else
+	rsr.PS a2
 #endif
 	wsr.ps a2
 	CALL _xstack_call1_\@
@@ -472,6 +474,10 @@ _not_l1:
 #if XCHAL_HAVE_INTERRUPTS
 	rsil a0, 0xf
 #endif
+#else
+#if XCHAL_HAVE_INTERRUPTS
+	rsr.ps a0
+#endif
 #endif
 	/* Since we are unmasking EXCM, we need to set RING bits to kernel
 	 * mode, otherwise we won't be able to run the exception handler in C.
@@ -480,6 +486,8 @@ _not_l1:
 	and a0, a0, a3
 #ifndef XCHAL_HAVE_XEA3
 	wsr.ZSR_EPS a0
+#else
+	wsr.ps a0
 #endif
 	wsr.ps a0
 	rsync
@@ -490,9 +498,7 @@ _not_l1:
 	 * entirely new area depending on whether we find a 1 in our
 	 * SR[off] macro argument.
 	 */
-#ifndef XCHAL_HAVE_XEA3
 	rsr.ZSR_CPU a3
-#endif
 	l32i a0, a3, \NEST_OFF
 	beqz a0, _switch_stacks_\@
 
@@ -517,6 +523,8 @@ _do_call_\@:
 #ifndef XCHAL_HAVE_XEA3
 	rsil a0, XCHAL_NUM_INTLEVELS
 	/* Decrement nest count */
+#else
+	rsr.ps a0
 #endif
 	rsr.ZSR_CPU a3
 	l32i a0, a3, \NEST_OFF
@@ -701,11 +709,15 @@ _not_triple_fault:
 .else
 #ifndef XCHAL_HAVE_XEA3
 	rsr.eps\LVL a0
+#else
+	rsr.ps a0
 #endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_ps_OFFSET
 .endif
 #ifndef XCHAL_HAVE_XEA3
 	rsr.epc\LVL a0
+#else
+	rsr.epc a0
 #endif
 	s32i a0, a1, ___xtensa_irq_bsa_t_pc_OFFSET
 

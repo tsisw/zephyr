@@ -46,9 +46,10 @@ config SOC_SKYP_TXE
 	select XTENSA_SMALL_VECTOR_TABLE_ENTRY
 #	select ARCH_HAS_USERSPACE
 	select CPU_HAS_DCACHE
-#	select CPU_HAS_MPU
-#	select XTENSA_MPU
-#       select DYNAMIC_OBJECTS 
+	select CPU_HAS_MPU
+	select XTENSA_MPU
+	select ARCH_HAS_SINGLE_THREAD_SUPPORT
+#        select DYNAMIC_OBJECTS 
 
 # config MCUX_CORE_SUFFIX
 # 	default "_dsp" if SOC_SKYP_TXE		

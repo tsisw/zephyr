@@ -54,17 +54,11 @@ static inline void z_xt_ints_on(unsigned int mask)
 static inline void z_xt_ints_off(unsigned int mask)
 {
 #pragma no_reorder
-#ifndef XCHAL_HAVE_XEA3
 	int val;
 
 	__asm__ volatile("rsr.intenable %0" : "=r"(val));
 	val &= ~mask;
 	__asm__ volatile("wsr.intenable %0; rsync" : : "r"(val));
-#else
-	 uint32_t val = PS_DI;
-     //XT_XPS(val, val);
-     //return val;	
-#endif
 }
 inline void XTHAL_WER(uint32_t reg, uint32_t val) // Not supportable on RNX, not documented, but used internally. (Deprecate?)
 {
@@ -77,18 +71,9 @@ inline void XTHAL_WER(uint32_t reg, uint32_t val) // Not supportable on RNX, not
  */
 static inline void z_xt_set_intset(unsigned int arg)
 {
-#ifndef XCHAL_HAVE_XEA3
+#ifdef XCHAL_HAVE_INTERRUPTS
 	__asm__ volatile("wsr.intset %0; rsync" : : "r"(arg));
-#else
-	if (arg < ((uint32_t) XCHAL_NUM_INTERRUPTS))
-    {
-        uint32_t addr = IC_CTRLREG(arg);
-        uint32_t rval = (INTCTRL_ENABLE_WRITE | INTCTRL_ENABLE);
-
-        // Set the 'enable' bit and the 'write-enable' bit for it.
-        XTHAL_WER(addr, rval);
-    }
-	//ARG_UNUSED(arg);
+	ARG_UNUSED(arg);
 #endif
 }
 
@@ -173,7 +158,8 @@ static ALWAYS_INLINE unsigned int arch_irq_lock(void)
 			 : "=r"(key) : "i"(XCHAL_EXCM_LEVEL) : "memory");
 	return key;
 #else
-	return 0;
+	__asm__ volatile("rsr.ps %0" : "=r" (key):"i"(XCHAL_EXCM_LEVEL) : "memory");
+	return key;
 #endif
 }
 
