@@ -15,7 +15,7 @@ This application can be built as follows:
 .. zephyr-app-commands::
    :zephyr-app:
    :host-os: unix
-   :board: ek_tsi_skyp/m85 
+   :board: ek_tsi_skyp/m85
    :goals: run
    :compact:
 
@@ -26,9 +26,9 @@ Sample Output
         Tsavorite Scalable Intelligence
 
     |||||||||||||||||||||||||||||||||||||
-    ||||||||||||||||||||||||||||||||||||| 
+    |||||||||||||||||||||||||||||||||||||
     ||||||                          |||||
-    ||||||                          ||||| 
+    ||||||                          |||||
     |||||||||||||||||   |||||       ||||| 
     |||||||||||||||||   |||||       |||||
                ||||||   |||||
