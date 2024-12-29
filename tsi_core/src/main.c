@@ -42,7 +42,7 @@ int main(void)
 
         LOG_INF("Test Platform: %s", CONFIG_BOARD_TARGET);
 	LOG_WRN("Testing on FPGA");
-	printk("TSI Logging enabled and printk is functional\n");
+	printk("TSI Logging enabled & printk is functional\n");
 
 	return 0;
 }

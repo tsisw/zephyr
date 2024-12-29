@@ -14,8 +14,8 @@ Building and Running
 This application can be built as follows:
 .. zephyr-app-commands::
    :zephyr-app:
-   :host-os: unix
-   :board: tsi/skyp/m85
+   :host-os:unix
+   :board:tsi/skyp/m85
    :goals: run
    :compact:
 
@@ -41,8 +41,8 @@ Sample Output
                 |||||   |||||
                   |||   |||
                         |
-[00:00:00.012,000] <inf> m85: Test Platform: tsi/skyp/m85
-[00:00:00.013,000] <wrn> m85: Testing on FPGA
+[00:00:00.012 000] <inf> m85: Test Platform: tsi/skyp/m85
+[00:00:00.013 000] <wrn> m85: Testing on FPGA
 TSI Logging enabled and printk is functional
 TSI:~$
 TSI:~$
