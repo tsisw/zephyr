@@ -46,3 +46,4 @@ Sample Output
 TSI Logging enabled and printk is functional
 TSI:~$
 TSI:~$
+

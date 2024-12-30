@@ -3,7 +3,6 @@
  *
  */
 
-
 #include <stddef.h>
 #include <stdio.h>
 #include <zephyr/kernel.h>
@@ -19,7 +18,6 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
 int main(void)
 {
-
 	/* TSI banner */
 	PRINT_TSI_BOOT_BANNER();
 	printf("\n");
@@ -28,8 +26,7 @@ int main(void)
 	printf("    ||||||                          |||||\n");
 	printf("    ||||||                          |||||\n");
 	printf("    |||||||||||||||||   |||||       |||||\n");
-	printf("    |||||||||||||||||   |||||       |||||\n");
-	printf("               ||||||   |||||\n");
+  printf("               ||||||   |||||\n");
 	printf("    ||||||     ||||||   |||||      ||||||\n");
 	printf("     ||||||||  ||||||   |||||   ||||||||\n");
 	printf("       ||||||||||||||   ||||||||||||||\n");
@@ -39,8 +36,8 @@ int main(void)
 	printf("                |||||   |||||\n");
 	printf("                  |||   |||\n");
 	printf("                        |\n");
-
-        LOG_INF("Test Platform: %s", CONFIG_BOARD_TARGET);
+  
+  LOG_INF("Test Platform: %s", CONFIG_BOARD_TARGET);
 	LOG_WRN("Testing on FPGA");
 	printk("TSI Logging enabled & printk is functional\n");
 
