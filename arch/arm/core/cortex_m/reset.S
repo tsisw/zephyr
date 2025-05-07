@@ -75,7 +75,7 @@ SECTION_SUBSEC_FUNC(TEXT,_reset_section,__start)
 soc_reset:
     ldr r0, =SOC_RESET_CTRL /* Load the address of the reset control register */
     ldr r1, [r0]            /* Read current value */
-    bic r1, r1, #0x7        /* Clear bits 0, 1, and 2 (reset bits) */
+    bic r1, r1, #0x6        /* Clear bits 0, 1 (hard & soft reset bits) */
     str r1, [r0]            /* Write back to release reset */
     /* Reset completed*/
 
