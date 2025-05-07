@@ -57,6 +57,8 @@ GTEXT(arch_pm_s2ram_resume)
  * setting up the system for running C code.
  *
  */
+.section .text
+.equ SOC_RESET_CTRL, 0x80800010
 
 SECTION_SUBSEC_FUNC(TEXT,_reset_section,z_arm_reset)
 
@@ -70,10 +72,11 @@ SECTION_SUBSEC_FUNC(TEXT,_reset_section,__start)
 
     /* Clear bits 0,1,2 of SCU_REGS_SCU_IP0CLK_REGS_GLOBAL_RESET_BYTE_ADDRESS*/
     /* This will pull the BKs out of reset  */
-    ldr r0, =0x80800010      /* Load the address of the reset control register */
-    ldr r1, [r0]             /* Read current value */
-    bic r1, r1, #0x7         /* Clear bits 0, 1, and 2 (reset bits) */
-    str r1, [r0]             /* Write back to release reset */
+soc_reset:
+    ldr r0, =SOC_RESET_CTRL /* Load the address of the reset control register */
+    ldr r1, [r0]            /* Read current value */
+    bic r1, r1, #0x7        /* Clear bits 0, 1, and 2 (reset bits) */
+    str r1, [r0]            /* Write back to release reset */
     /* Reset completed*/
 
 #if defined(CONFIG_DEBUG_THREAD_INFO)
