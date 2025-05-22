@@ -1,0 +1,9 @@
+family:
+  - name: sky
+    series:
+      - name: skylp_v1
+        socs:
+          - name: skylp
+            cpuclusters:
+              - name: m85
+              - name: txe
