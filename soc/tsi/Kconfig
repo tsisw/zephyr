@@ -1,0 +1,14 @@
+# Copyright (c) 2024 TSI
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_FAMILY_ARM || SOC_FAMILY_ARM64
+
+rsource "*/Kconfig"
+
+config BUILD_WITH_TFM
+	default y if TRUSTED_EXECUTION_NONSECURE
+	help
+	  By default, if we build for a Non-Secure version of the board,
+	  enable building with TF-M as the Secure Execution Environment.
+
+endif # SOC_FAMILY_ARM || SOC_FAMILY_ARM64
