@@ -58,6 +58,9 @@ GTEXT(arch_pm_s2ram_resume)
  *
  */
 
+.section .text
+.equ SOC_RESET_CTRL, 0x80800010
+
 SECTION_SUBSEC_FUNC(TEXT,_reset_section,z_arm_reset)
 
 /*
@@ -67,6 +70,15 @@ SECTION_SUBSEC_FUNC(TEXT,_reset_section,z_arm_reset)
  * search for a __start symbol instead, so create that alias here.
  */
 SECTION_SUBSEC_FUNC(TEXT,_reset_section,__start)
+
+ /* Clear bits 0,1,2 of SCU_REGS_SCU_IP0CLK_REGS_GLOBAL_RESET_BYTE_ADDRESS*/
+    /* This will pull the BKs out of reset  */
+soc_reset:
+    ldr r0, =SOC_RESET_CTRL /* Load the address of the reset control register */
+    ldr r1, [r0]            /* Read current value */
+    bic r1, r1, #0x6        /* Clear bits 0, 1 (hard & soft reset bits) */
+    str r1, [r0]            /* Write back to release reset */
+    /* Reset completed*/
 
 #if defined(CONFIG_INIT_ARCH_HW_AT_BOOT)
     /* Reset CONTROL register */
