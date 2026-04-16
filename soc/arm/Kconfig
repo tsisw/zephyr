@@ -3,6 +3,6 @@
 
 if SOC_FAMILY_ARM || SOC_FAMILY_ARM64
 
-rsource "*/Kconfig"
+rsource "gmc_qemu/Kconfig"
 
 endif # SOC_FAMILY_ARM || SOC_FAMILY_ARM64

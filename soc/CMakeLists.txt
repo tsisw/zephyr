@@ -9,7 +9,7 @@ if(_SOC_IS_IN_TREE)
 endif()
 unset(_SOC_IS_IN_TREE)
 
-add_subdirectory(common)
+#add_subdirectory(common)
 
 if(HWMv1)
   message(DEPRECATION "
@@ -44,15 +44,15 @@ elseif(HWMv2)
                         "series: ${SOC_SERIES}, family: ${SOC_FAMILY}")
   endif()
 
-  # Include all SoC roots except Zephyr, as we are already in the Zephyr SoC root.
-  set(local_soc_root ${SOC_ROOT})
-  list(REMOVE_ITEM local_soc_root ${ZEPHYR_BASE})
-  foreach(root ${local_soc_root})
-    cmake_path(GET root FILENAME name)
-    # A SoC root for HWMv1 may not contain a CMakeLists.txt file on this so
-    # let's check for existence before including.
-    if(EXISTS ${root}/soc/CMakeLists.txt)
-      add_subdirectory(${root}/soc soc/${name})
-    endif()
-  endforeach()
+  #  # Include all SoC roots except Zephyr, as we are already in the Zephyr SoC root.
+  #set(local_soc_root ${SOC_ROOT})
+  #list(REMOVE_ITEM local_soc_root ${ZEPHYR_BASE})
+  #foreach(root ${local_soc_root})
+  #  cmake_path(GET root FILENAME name)
+  #  # A SoC root for HWMv1 may not contain a CMakeLists.txt file on this so
+  #  # let's check for existence before including.
+  #  if(EXISTS ${root}/soc/CMakeLists.txt)
+  #    add_subdirectory(${root}/soc soc/${name})
+  #  endif()
+  #endforeach()
 endif()

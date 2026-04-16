@@ -6,14 +6,16 @@
 orsource "Kconfig.$(HWM_SCHEME).choice"
 
 menu "Hardware Configuration"
-
 rsource "Kconfig.$(HWM_SCHEME)"
 
-# Source Zephyr Kconfig specifics from SoC roots.
-osource "$(KCONFIG_BINARY_DIR)/soc/Kconfig"
+#if ARM
 
-# Source common Kconfig file
-osource "soc/common/Kconfig"
+#rsource "Kconfig.$(HWM_SCHEME)"
+
+## Source common Kconfig file
+#osource "soc/arm/*/Kconfig"
+
+#endif #ARM
 
 module = SOC
 module-str = SOC

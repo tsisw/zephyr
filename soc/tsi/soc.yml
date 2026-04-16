@@ -1,17 +1,7 @@
 family:
-  - name: sky
+  - name: tsi 
     series:
-      - name: skyp_v1
+      - name: gmc 
         socs:
-          - name: skyp
-            cpuclusters:
-              - name: m85
-              - name: txe
-  - name: sky
-    series:
-      - name: skylp_v1
-        socs:
-          - name: skylp
-            cpuclusters:
-              - name: m85
-              - name: txe
+          - name: gmc_qemu 
+
