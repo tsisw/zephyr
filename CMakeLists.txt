@@ -1898,6 +1898,7 @@ if (CONFIG_LLEXT AND CONFIG_LLEXT_EXPORT_BUILTINS_BY_SLID)
     ${ZEPHYR_BASE}/scripts/build/llext_prepare_exptab.py
     --elf-file ${PROJECT_BINARY_DIR}/${KERNEL_ELF_NAME}
     --slid-listing ${PROJECT_BINARY_DIR}/slid_listing.txt
+    -vvv
   )
 
 endif()
@@ -1988,39 +1989,22 @@ elseif(CONFIG_LOG_MIPI_SYST_USE_CATALOG)
 endif()
 
 if(LOG_DICT_DB_NAME_ARG)
-  set(log_dict_gen_command
+  if (NOT CONFIG_LOG_DICTIONARY_DB_TARGET)
+    set(LOG_DICT_DB_ALL_TARGET ALL)
+  endif()
+  add_custom_command(
+    OUTPUT ${LOG_DICT_DB_NAME}
+    COMMAND
       ${PYTHON_EXECUTABLE}
       ${ZEPHYR_BASE}/scripts/logging/dictionary/database_gen.py
       ${KERNEL_ELF_NAME}
       ${LOG_DICT_DB_NAME_ARG}=${LOG_DICT_DB_NAME}
       --build-header ${PROJECT_BINARY_DIR}/include/generated/zephyr/version.h
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    COMMENT "Generating logging dictionary database: ${LOG_DICT_DB_NAME}"
+    DEPENDS ${logical_target_for_zephyr_elf}
   )
-
-  if (NOT CONFIG_LOG_DICTIONARY_DB_TARGET)
-    # If not using a separate target for generating logging dictionary
-    # database, add the generation to post build command to make sure
-    # the database is actually being generated.
-    list(APPEND
-      post_build_commands
-      COMMAND ${CMAKE_COMMAND} -E echo "Generating logging dictionary database: ${LOG_DICT_DB_NAME}"
-      COMMAND ${log_dict_gen_command}
-    )
-    list(APPEND
-      post_build_byproducts
-      ${LOG_DICT_DB_NAME}
-    )
-  else()
-    # Seprate build target for generating logging dictionary database.
-    # This needs to be explicitly called/used to generate the database.
-    add_custom_command(
-      OUTPUT ${LOG_DICT_DB_NAME}
-      COMMAND ${log_dict_gen_command}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-      COMMENT "Generating logging dictionary database: ${LOG_DICT_DB_NAME}"
-      DEPENDS ${logical_target_for_zephyr_elf}
-    )
-    add_custom_target(log_dict_db_gen DEPENDS ${LOG_DICT_DB_NAME})
-  endif()
+  add_custom_target(log_dict_db_gen ${LOG_DICT_DB_ALL_TARGET} DEPENDS ${LOG_DICT_DB_NAME})
 endif()
 
 # Add post_build_commands to post-process the final .elf file produced by
@@ -2035,6 +2019,48 @@ add_custom_command(
   ${post_build_byproducts}
   COMMAND_EXPAND_LISTS
   )
+
+if(CONFIG_BUILD_OUTPUT_TSV_STRIPPED_HEX)
+# Add post_build_commands to post-process the final .hex file produced by
+# stripping first line of zephyr.hex
+find_package(Perl REQUIRED)
+set(MERGED_KERNEL_HEX_NAME merged.hex)
+set(BIN_2_HEX_OPTION --width=64)
+set(BIN2HEX scripts/build/bin2heximage)
+add_custom_command(
+    OUTPUT ${MERGED_KERNEL_HEX_NAME}
+    COMMAND rm -fr ${PROJECT_BINARY_NAME}/*.hex
+    COMMAND ${PERL_EXECUTABLE} ${ZEPHYR_BASE}/${BIN2HEX} ${PROJECT_BINARY_DIR}/${KERNEL_BIN_NAME} ${PROJECT_BINARY_DIR}/${KERNEL_HEX_NAME} ${BIN_2_HEX_OPTION}
+    DEPENDS ${logical_target_for_zephyr_elf}
+    )
+
+    add_custom_target(bin2hex ALL DEPENDS ${MERGED_KERNEL_HEX_NAME})
+    list(APPEND RUNNERS_DEPS bin2hex)
+    message(VERBOSE "Creating hex files: ${MERGED_KERNEL_HEX_NAME}")
+
+# Remove the 1st line of elf header from the zepher.hex file
+# and call the enw file as zephyrstrp.hex
+
+set(STRIPPED_KERNEL_HEX_NAME stripped.hex)
+set(STRIPPED_HEX_NAME zephyrstrp.hex)
+set(TAIL_EXECUTABLE /usr/bin/tail)
+set(HEAD_EXECUTABLE /usr/bin/head)
+set(TSVBOOTLOADER_NAME scripts/build/tsvbootloader.hex)
+set(TSVIMAGELOADER_NAME IMAGE0_testfile.hex)
+add_custom_command(
+	OUTPUT ${STRIPPED_KERNEL_HEX_NAME}
+	COMMAND ${TAIL_EXECUTABLE} -n +2 ${PROJECT_BINARY_DIR}/${KERNEL_HEX_NAME} >> ${PROJECT_BINARY_DIR}/${STRIPPED_HEX_NAME}
+	COMMAND ${HEAD_EXECUTABLE} -n +48 ${ZEPHYR_BASE}/${TSVBOOTLOADER_NAME} >> ${PROJECT_BINARY_DIR}/${TSVIMAGELOADER_NAME}
+	COMMAND ${HEAD_EXECUTABLE} -n +1 ${PROJECT_BINARY_DIR}/${STRIPPED_HEX_NAME} >> ${PROJECT_BINARY_DIR}/${TSVIMAGELOADER_NAME}
+	COMMAND ${TAIL_EXECUTABLE} -n +50 ${ZEPHYR_BASE}/${TSVBOOTLOADER_NAME} >> ${PROJECT_BINARY_DIR}/${TSVIMAGELOADER_NAME}
+	COMMAND ${TAIL_EXECUTABLE} -n +1 ${PROJECT_BINARY_DIR}/${STRIPPED_HEX_NAME} >> ${PROJECT_BINARY_DIR}/${TSVIMAGELOADER_NAME}
+	DEPENDS ${MERGED_KERNEL_HEX_NAME}
+    )
+
+    add_custom_target(strippedhex ALL DEPENDS ${STRIPPED_KERNEL_HEX_NAME})
+    list(APPEND RUNNERS_DEPS strippedhex)
+    message(VERBOSE "strippng hex files: ${STRIPPED_KERNEL_HEX_NAME}")
+endif()
 
 # To populate with hex files to merge, do the following:
 #  set_property(GLOBAL APPEND PROPERTY HEX_FILES_TO_MERGE ${my_local_list})
