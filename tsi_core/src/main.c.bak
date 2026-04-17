@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2024-2025 TSI
+ *
+ */
+
+#include <stddef.h>
+#include <stdio.h>
+#include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/logging/log_ctrl.h>
+#include <zephyr/logging/log_output.h>
+
+#define DATA_MAX_DLEN 8
+#define LOG_MODULE_NAME m85
+LOG_MODULE_REGISTER(LOG_MODULE_NAME);
+#define PRINT_TSI_BOOT_BANNER()  printk("        Tsavorite Scalable Intelligence \n")
+#define SCU_IP0CLK_GLOBAL_RESET_ADDR 0x80800010
+
+int main(void)
+{
+	/* TSI banner */
+	PRINT_TSI_BOOT_BANNER();
+	printf("\n");
+	printf("    |||||||||||||||||||||||||||||||||||||\n");
+	printf("    |||||||||||||||||||||||||||||||||||||\n");
+	printf("    ||||||                          |||||\n");
+	printf("    ||||||                          |||||\n");
+	printf("    |||||||||||||||||   |||||       |||||\n");
+  printf("               ||||||   |||||\n");
+	printf("    ||||||     ||||||   |||||      ||||||\n");
+	printf("     ||||||||  ||||||   |||||   ||||||||\n");
+	printf("       ||||||||||||||   ||||||||||||||\n");
+	printf("          |||||||||||   ||||||||||||\n");
+	printf("            |||||||||   ||||||||||\n");
+	printf("              |||||||   ||||||||\n");
+	printf("                |||||   |||||\n");
+	printf("                  |||   |||\n");
+	printf("                        |\n");
+  
+        LOG_INF("Logging Info: Test Platform: %s", CONFIG_BOARD_TARGET);
+	LOG_WRN("Logging Warning : Testing on FPGA");
+	printk(" From printk: TSI Logging enabled & printk is functional\n");
+        // Call the function to release the chip-wide reset
+        /* release_A53_reset(); */
+	printk("release chip from reset is working\n");
+
+}
+void release_A53_reset() {
+    // Pointer to the register
+    volatile uint32_t *reg = (volatile uint32_t *)SCU_IP0CLK_GLOBAL_RESET_ADDR;
+
+    // Read the current value of the register
+//    uint32_t reg_val = *reg;
+    uint32_t reg_val = *(uint32_t *) reg;
+
+    // Clear the hard_reset and soft_reset bits
+    reg_val &= ~(1 << 1); // Clear bit 0 (hard_reset)
+    reg_val &= ~(1 << 2); // Clear bit 1 (soft_reset)
+
+    // Write the modified value back to the register
+    *reg = reg_val;
+    
+}
+
