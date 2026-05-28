@@ -1,0 +1,18 @@
+/*
+ * GMC Zephyr memory map for dual-QEMU (shared guest_mem @ 0x60000000).
+ *
+ * BL1_2 loads at 0x60000000 on SMC; place vectors and ROM at TSI_NONSECURE_BASE so
+ * SMC boot does not overwrite the GMC image. RAM ends below mailbox SHM @ 0x601FF000.
+ */
+
+&sram0 {
+	reg = <0x60120000 DT_SIZE_K(128)>;
+};
+
+/*
+ * RAM through end of NS slot (0x60200000), including mailbox SHM @ 0x601FF000.
+ * Do not stop at 0xBF000 — that ends at 0x601FF000 and excludes the 4 KiB SHM.
+ */
+&sram {
+	reg = <0x60140000 0x000c0000>;
+};
