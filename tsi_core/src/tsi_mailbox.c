@@ -366,9 +366,9 @@ int tsi_mailbox_run_psa_lab_sequence(void)
 	}
 
 	/*
-	 * 3) PSA_CONNECT on stateless platform (expects CONNECTION_REFUSED).
+	 * 3) PSA_CONNECT on stateless platform (TF-M: PSA_ERROR_PROGRAMMER_ERROR).
 	 */
-	printk("[GMC-MB] psa-lab: [3/4] PSA_CONNECT platform sid=0x%08x (stateless -> refused)\n",
+	printk("[GMC-MB] psa-lab: [3/4] PSA_CONNECT platform sid=0x%08x (stateless -> error)\n",
 	       TSI_MB_PLATFORM_SERVICE_SID);
 	ret = tsi_mailbox_enqueue_psa_connect(slot, TSI_MB_PLATFORM_SERVICE_SID,
 					      TSI_MB_PLATFORM_SERVICE_VERSION, client_id);
@@ -379,13 +379,15 @@ int tsi_mailbox_run_psa_lab_sequence(void)
 		printk("[GMC-MB] psa-lab: PSA_CONNECT transact failed ret=%d\n", ret);
 		return ret;
 	}
-	if (reply != TSI_MB_PSA_ERROR_CONNECTION_REFUSED) {
+	if (reply != TSI_MB_PSA_ERROR_PROGRAMMER_ERROR &&
+	    reply != TSI_MB_PSA_ERROR_CONNECTION_REFUSED) {
 		printk("[GMC-MB] psa-lab: PSA_CONNECT unexpected reply=0x%08x "
-		       "(expect 0x%08x CONNECTION_REFUSED)\n",
-		       (uint32_t)reply, (uint32_t)TSI_MB_PSA_ERROR_CONNECTION_REFUSED);
+		       "(expect 0x%08x PROGRAMMER_ERROR or 0x%08x CONNECTION_REFUSED)\n",
+		       (uint32_t)reply, (uint32_t)TSI_MB_PSA_ERROR_PROGRAMMER_ERROR,
+		       (uint32_t)TSI_MB_PSA_ERROR_CONNECTION_REFUSED);
 		return TSI_MB_INVAL_PARAMS;
 	}
-	printk("[GMC-MB] psa-lab: PSA_CONNECT OK reply=0x%08x (CONNECTION_REFUSED)\n",
+	printk("[GMC-MB] psa-lab: PSA_CONNECT OK reply=0x%08x (stateless reject)\n",
 	       (uint32_t)reply);
 
 	/* 4) PSA_CALL platform IOCTL with in/out vectors in shared IOBUF. */

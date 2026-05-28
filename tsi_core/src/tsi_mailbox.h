@@ -41,18 +41,19 @@
 #define TSI_MB_PSA_PROBE_SID           0x474D4302u /* 'GMC\x02' */
 #define TSI_MB_PSA_PROBE_REPLY_MAGIC   0x50454101u /* 'PEA\x01' */
 
-/* TFM platform partition (stateless handle 6, sid 0x40). */
+/* TFM platform partition (manifest stateless_handle 6 -> encoded PSA handle). */
 #define TSI_MB_PLATFORM_SERVICE_SID        0x00000040u
 #define TSI_MB_PLATFORM_SERVICE_VERSION    1u
-#define TSI_MB_PLATFORM_STATELESS_HANDLE   6
+#define TSI_MB_PLATFORM_STATELESS_HANDLE   0x40000105u
 #define TSI_MB_PLATFORM_API_ID_IOCTL       1013
 
 #define TSI_MB_PLATFORM_IOCTL_PROBE_REQ    0x54534901u /* 'TSI\x01' */
 #define TSI_MB_PLATFORM_IOCTL_REPLY_MAGIC  0x504C4101u /* 'PLA\x01' */
 /* TF-M tfm_spm_client_psa_version() returns service manifest version (see tfm_platform.yaml). */
 #define TSI_MB_PLATFORM_VERSION_EXPECTED     TSI_MB_PLATFORM_SERVICE_VERSION
-/* psa/error.h PSA_ERROR_CONNECTION_REFUSED — stateless platform CONNECT lab */
-#define TSI_MB_PSA_ERROR_CONNECTION_REFUSED  ((int32_t)-130)
+/* psa/error.h — stateless platform CONNECT lab (TF-M returns PROGRAMMER_ERROR) */
+#define TSI_MB_PSA_ERROR_PROGRAMMER_ERROR      ((int32_t)-129)
+#define TSI_MB_PSA_ERROR_CONNECTION_REFUSED    ((int32_t)-130)
 
 /*
  * IO buffers for PSA_CALL in/out vectors (both M85 map this NS SRAM in guest_mem).
