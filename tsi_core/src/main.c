@@ -12,6 +12,7 @@
 #include <zephyr/logging/log_ctrl.h>
 #include <zephyr/logging/log_output.h>
 #include "tsi_mailbox.h"
+#include "tsi_isolation_test.h"
 
 #define LOG_MODULE_NAME plat_boot
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
@@ -46,6 +47,16 @@ int main(void)
 	printk("Vtiwari custom GMC zephyr, with mailbox support: C1 \n");
 	printk("[GMC-MB] main: starting mailbox handshake\n");
 	tsi_mailbox_log_transport();
+
+#ifdef TSI_EXPECT_SECURE_ISOLATION
+	ret = tsi_isolation_run_tests(true);
+#else
+	ret = tsi_isolation_run_tests(false);
+#endif
+	if (ret != 0) {
+		printk("[GMC-ISO] isolation probes failed ret=%d\n", ret);
+		return ret;
+	}
 
 	ret = tsi_mailbox_boot_handshake(0U);
 	if (ret != 0) {

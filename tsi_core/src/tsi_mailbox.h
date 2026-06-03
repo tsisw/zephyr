@@ -57,13 +57,13 @@
 
 /*
  * IO buffers for PSA_CALL in/out vectors (both M85 map this NS SRAM in guest_mem).
- * Must sit in GMC RAM and below MAILBOX_SHM.
+ * Must sit in GMC RAM and below MAILBOX_SHM (0x6014F000).
  */
-#define TSI_MB_IOBUF_BASE 0x601FE000u
+#define TSI_MB_IOBUF_BASE 0x6014E000u
 
-/* Shared mailbox window in NS SRAM (must match TF-M `TSI_MAILBOX_SHM_BASE`). */
+/* Shared mailbox window — last 4 KiB of 320 KiB NS slot (architecture wiki). */
 #ifndef TSI_MB_SHM_BASE
-#define TSI_MB_SHM_BASE 0x601FF000u
+#define TSI_MB_SHM_BASE 0x6014F000u
 #endif
 
 #define TSI_MB_NS_PEER_READY_MAGIC  0x474D4301u /* 'GMC\x01' */
