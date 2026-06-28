@@ -57,6 +57,8 @@
 		zephyr,memory-region = "ITCM";
 	};
 
+	/*sram0: sram0@60000000 {	 alias @ 0x60000000 */
+/*		reg = <0x60000000 DT_SIZE_K(256)>; */
 	sram0: sram0@60000000 {	/* alias @ 0x60000000 */
 		compatible = "zephyr,memory-region";
 		reg = <0x60000000 DT_SIZE_K(256)>;
