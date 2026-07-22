@@ -18,6 +18,9 @@
 	#size-cells = <1>;
 
 	chosen {
+		/* Default console: JTAG UART (Bittware). ProFPGA builds override
+		 * this to &uart0 (PL011) via boards/tsi/skylp/profpga.overlay.
+		 */
 		zephyr,console = &jtag_uart;
 		zephyr,shell-uart = &jtag_uart;
 		zephyr,sram = &sram;
@@ -28,6 +31,32 @@
 		compatible = "altr,jtag-uart";
 		reg = <0x86003000 0x8>;
 		status = "enabled";
+	};
+
+	uartclk: uartclk {
+		compatible = "fixed-clock";
+		clock-frequency = <25000000>;
+		#clock-cells = <0>;
+	};
+
+	uart0: uart@86001000 {
+		compatible = "arm,pl011";
+		reg = <0x86001000 0x1000>;
+		interrupts = <36 3>;    /* unused in polled mode (CONFIG_UART_INTERRUPT_DRIVEN off) */
+		interrupt-parent = <&nvic>;
+		clocks = <&uartclk>;
+		current-speed = <115200>;
+		status = "okay";
+	};
+
+	uart1: uart@86002000 {
+		compatible = "arm,pl011";
+		reg = <0x86002000 0x1000>;
+		interrupts = <37 3>;    /* unused in polled mode */
+		interrupt-parent = <&nvic>;
+		clocks = <&uartclk>;
+		current-speed = <115200>;
+		status = "okay";
 	};
 
 	cpus {

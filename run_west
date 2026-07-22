@@ -1,0 +1,22 @@
+
+
+echo $HOST
+# ProFPGA build: console = IONE PL011 (uart0) via profpga.overlay (also disables
+# the Altera jtag_uart, which is absent on ProFPGA). Run from the zephyr dir.
+west build -p always -b tsi_skylp/skylp/m85 tsi_core -- \
+    -DOVERLAY_CONFIG=prj_poll.conf \
+    -DEXTRA_DTC_OVERLAY_FILE=$PWD/boards/tsi/skylp/profpga.overlay
+
+echo "copying to design"
+scp build/zephyr/zep*.* mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/design/bk/scu/dv/uvmf/project_benches/scu_tb/sim/ 
+scp build/zephyr/IM*.* mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/design/bk/scu/dv/uvmf/project_benches/scu_tb/sim/
+scp build/zephyr/zep*.* mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/design/bk/scu/dv/uvmf/project_benches/scu_tb/sim/bin
+scp build/zephyr/IM*.* mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/design/bk/scu/dv/uvmf/project_benches/scu_tb/sim/bin
+
+
+echo "copying to chiplet"
+scp build/zephyr/zep*.*  mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/chiplet/skylp/dv/uvmf/project_benches/skylp_tb/sim/
+scp build/zephyr/IM*.* mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/chiplet/skylp/dv/uvmf/project_benches/skylp_tb/sim/
+scp build/zephyr/zep*.*  mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/chiplet/skylp/dv/uvmf/project_benches/skylp_tb/sim/bin
+scp build/zephyr/IM*.*  mmankali@wssim0:/proj/work/mmankali/skylp-741-sohambranch/SKYLP_G0741/chiplet/skylp/dv/uvmf/project_benches/skylp_tb/sim/bin
+

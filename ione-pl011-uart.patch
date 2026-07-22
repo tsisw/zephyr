@@ -1,0 +1,160 @@
+diff --git a/boards/tsi/skylp/profpga.overlay b/boards/tsi/skylp/profpga.overlay
+new file mode 100644
+index 00000000000..7d6bf1a1334
+--- /dev/null
++++ b/boards/tsi/skylp/profpga.overlay
+@@ -0,0 +1,23 @@
++/*
++ * Copyright (c) 2026 TSI
++ * SPDX-License-Identifier: Apache-2.0
++ *
++ * ProFPGA (Siemens M85) console overlay.
++ *
++ * The board default routes the Zephyr console/shell to the Altera JTAG UART
++ * (jtag_uart), which is only present on the Bittware (Intel FPGA) platform.
++ * ProFPGA has no Altera JTAG UART, so this overlay repoints the console/shell
++ * to the IONE PL011 uart0 at 0x86001000.
++ *
++ * Apply with:
++ *   west build -b tsi_skylp/skylp/m85 tsi_core -- \
++ *       -DOVERLAY_CONFIG=prj_poll.conf \
++ *       -DEXTRA_DTC_OVERLAY_FILE=boards/tsi/skylp/profpga.overlay
++ */
++
++/ {
++	chosen {
++		zephyr,console = &uart0;
++		zephyr,shell-uart = &uart0;
++	};
++};
+diff --git a/boards/tsi/skylp/tsi_skylp_m85.dts b/boards/tsi/skylp/tsi_skylp_m85.dts
+index cf462172686..51a1f0b4c85 100644
+--- a/boards/tsi/skylp/tsi_skylp_m85.dts
++++ b/boards/tsi/skylp/tsi_skylp_m85.dts
+@@ -18,6 +18,9 @@
+ 	#size-cells = <1>;
+ 
+ 	chosen {
++		/* Default console: JTAG UART (Bittware). ProFPGA builds override
++		 * this to &uart0 (PL011) via boards/tsi/skylp/profpga.overlay.
++		 */
+ 		zephyr,console = &jtag_uart;
+ 		zephyr,shell-uart = &jtag_uart;
+ 		zephyr,sram = &sram;
+@@ -30,6 +33,32 @@
+ 		status = "enabled";
+ 	};
+ 
++	uartclk: uartclk {
++		compatible = "fixed-clock";
++		clock-frequency = <25000000>;
++		#clock-cells = <0>;
++	};
++
++	uart0: uart@86001000 {
++		compatible = "arm,pl011";
++		reg = <0x86001000 0x1000>;
++		interrupts = <36 3>;    /* unused in polled mode (CONFIG_UART_INTERRUPT_DRIVEN off) */
++		interrupt-parent = <&nvic>;
++		clocks = <&uartclk>;
++		current-speed = <115200>;
++		status = "okay";
++	};
++
++	uart1: uart@86002000 {
++		compatible = "arm,pl011";
++		reg = <0x86002000 0x1000>;
++		interrupts = <37 3>;    /* unused in polled mode */
++		interrupt-parent = <&nvic>;
++		clocks = <&uartclk>;
++		current-speed = <115200>;
++		status = "okay";
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/boards/tsi/skylp/tsi_skylp_m85_defconfig b/boards/tsi/skylp/tsi_skylp_m85_defconfig
+index 189b5ca5954..ef12aca39c1 100644
+--- a/boards/tsi/skylp/tsi_skylp_m85_defconfig
++++ b/boards/tsi/skylp/tsi_skylp_m85_defconfig
+@@ -10,6 +10,7 @@ CONFIG_QEMU_ICOUNT_SHIFT=7
+ CONFIG_CONSOLE=y
+ CONFIG_UART_CONSOLE=y
+ CONFIG_SERIAL=y
++CONFIG_UART_PL011=y
+ 
+ # Build a Secure firmware image
+ CONFIG_TRUSTED_EXECUTION_SECURE=n
+diff --git a/soc/tsi/skylp_v1/Kconfig.soc b/soc/tsi/skylp_v1/Kconfig.soc
+index 73d8b4c1244..c16ec5fc331 100644
+--- a/soc/tsi/skylp_v1/Kconfig.soc
++++ b/soc/tsi/skylp_v1/Kconfig.soc
+@@ -10,7 +10,7 @@ config SOC_SERIES_SKYLP_V1
+ 
+ config SOC_SKYLP
+ 	bool
+-	select SOC_SERIES_SKYP_V1
++	select SOC_SERIES_SKYLP_V1
+ 	help
+ 	  skylp
+ 
+diff --git a/soc/tsi/skylp_v1/soc.c b/soc/tsi/skylp_v1/soc.c
+index 1db1d7a4e6d..47b6dcc08b3 100644
+--- a/soc/tsi/skylp_v1/soc.c
++++ b/soc/tsi/skylp_v1/soc.c
+@@ -7,6 +7,7 @@
+ #include <zephyr/drivers/gpio/gpio_mmio32.h>
+ #include <soc.h>
+ #include <zephyr/linker/linker-defs.h>
++#include <zephyr/init.h>
+ 
+ 
+ /* Setup GPIO drivers for accessing FPGAIO registers */
+@@ -21,3 +22,46 @@
+  */
+ 
+ FPGAIO_INIT(2);
++
++/*
++ * IONE UART pad enables (not part of the PL011 register block).
++ * Mirrors the bare-metal uart_init() pad setup:
++ *   RX/CTS pads -> input enable (IE, bit4) = 0x610
++ *   TX/RTS pads -> output enable (OE, bit3) = 0x608
++ * IONE chiplet base (M85 view, skylp) = 0x86000000
++ * (0x60000000 + SKYLP_REGS_IONE_REGS_OFFSET 0x26000000).
++ */
++#define IONE_BASE            0x86000000UL
++#define IONE_UART_PAD_IE     0x610U
++#define IONE_UART_PAD_OE     0x608U
++
++/* Pad-control register offsets within IONE (from ione_regs.h) */
++#define IONE_UART_RX_0_CONTROL  (IONE_BASE + 0x104U)
++#define IONE_UART_CTS_0_CONTROL (IONE_BASE + 0x108U)
++#define IONE_UART_TX_0_CONTROL  (IONE_BASE + 0x10cU)
++#define IONE_UART_RTS_0_CONTROL (IONE_BASE + 0x110U)
++#define IONE_UART_RX_1_CONTROL  (IONE_BASE + 0x114U)
++#define IONE_UART_TX_1_CONTROL  (IONE_BASE + 0x118U)
++#define IONE_UART_RTS_1_CONTROL (IONE_BASE + 0x11cU)
++#define IONE_UART_CTS_1_CONTROL (IONE_BASE + 0x120U)
++
++#define IONE_REG(addr) (*(volatile uint32_t *)(addr))
++
++static int tsi_ione_uart_pads_init(void)
++{
++	/* UART0 */
++	IONE_REG(IONE_UART_RX_0_CONTROL)  = IONE_UART_PAD_IE;
++	IONE_REG(IONE_UART_CTS_0_CONTROL) = IONE_UART_PAD_IE;
++	IONE_REG(IONE_UART_TX_0_CONTROL)  = IONE_UART_PAD_OE;
++	IONE_REG(IONE_UART_RTS_0_CONTROL) = IONE_UART_PAD_OE;
++
++	/* UART1 */
++	IONE_REG(IONE_UART_RX_1_CONTROL)  = IONE_UART_PAD_IE;
++	IONE_REG(IONE_UART_CTS_1_CONTROL) = IONE_UART_PAD_IE;
++	IONE_REG(IONE_UART_TX_1_CONTROL)  = IONE_UART_PAD_OE;
++	IONE_REG(IONE_UART_RTS_1_CONTROL) = IONE_UART_PAD_OE;
++
++	return 0;
++}
++
++SYS_INIT(tsi_ione_uart_pads_init, PRE_KERNEL_1, 0);
