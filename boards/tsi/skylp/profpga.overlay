@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2026 TSI
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * ProFPGA (Siemens M85) console overlay.
+ *
+ * The board default routes the Zephyr console/shell to the Altera JTAG UART
+ * (jtag_uart), which is only present on the Bittware (Intel FPGA) platform.
+ * ProFPGA has no Altera JTAG UART, so this overlay repoints the console/shell
+ * to the IONE PL011 uart0 at 0x86001000 and disables jtag_uart (its driver
+ * init would otherwise access 0x86003000 and hang boot on ProFPGA).
+ *
+ * Apply with:
+ *   west build -b tsi_skylp/skylp/m85 tsi_core -- \
+ *       -DOVERLAY_CONFIG=prj_poll.conf \
+ *       -DEXTRA_DTC_OVERLAY_FILE=$PWD/boards/tsi/skylp/profpga.overlay
+ */
+
+/ {
+	chosen {
+		zephyr,console = &uart0;
+		zephyr,shell-uart = &uart0;
+	};
+};
+
+&jtag_uart {
+	status = "disabled";
+};

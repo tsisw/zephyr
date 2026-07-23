@@ -10,7 +10,7 @@ config SOC_SERIES_SKYLP_V1
 
 config SOC_SKYLP
 	bool
-	select SOC_SERIES_SKYP_V1
+	select SOC_SERIES_SKYLP_V1
 	help
 	  skylp
 
