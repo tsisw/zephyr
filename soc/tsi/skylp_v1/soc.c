@@ -32,6 +32,9 @@ FPGAIO_INIT(2);
  * (0x60000000 + SKYLP_REGS_IONE_REGS_OFFSET 0x26000000). Runs before the PL011
  * driver init so the physical TX/RX pins are live.
  */
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(uart0), okay) || \
+    DT_NODE_HAS_STATUS(DT_NODELABEL(uart1), okay)
+
 #define IONE_BASE            0x86000000UL
 #define IONE_UART_PAD_IE     0x610U
 #define IONE_UART_PAD_OE     0x608U
@@ -67,3 +70,5 @@ static int tsi_ione_uart_pads_init(void)
 
 /* Pads before the PL011 driver init (PRE_KERNEL_1 / SERIAL prio 50). */
 SYS_INIT(tsi_ione_uart_pads_init, PRE_KERNEL_1, 0);
+
+#endif /* uart0 or uart1 enabled */

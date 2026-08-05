@@ -26,3 +26,14 @@
 &jtag_uart {
 	status = "disabled";
 };
+
+/* The PL011 nodes are disabled in the base board dts so that non-profpga
+ * builds (QEMU / dual-QEMU mailbox lab) neither instantiate the driver nor
+ * touch the IONE pad registers. Enabled here for the pro-FPGA only. */
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};

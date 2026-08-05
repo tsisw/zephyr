@@ -43,7 +43,7 @@
 		interrupt-parent = <&nvic>;
 		clocks = <&uartclk>;
 		current-speed = <115200>;
-		status = "okay";
+		status = "disabled";
 	};
 
 	uart1: uart@86002000 {
@@ -53,7 +53,7 @@
 		interrupt-parent = <&nvic>;
 		clocks = <&uartclk>;
 		current-speed = <115200>;
-		status = "okay";
+		status = "disabled";
 	};
 
 	cpus {
