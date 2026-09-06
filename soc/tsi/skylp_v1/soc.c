@@ -39,7 +39,24 @@ FPGAIO_INIT(2);
 #define IONE_UART_PAD_IE     0x610U
 #define IONE_UART_PAD_OE     0x608U
 
-/* Pad-control register offsets within IONE (from ione_regs.h) */
+/*
+ * Pad-control register offsets within IONE. The block moved down by 4 between the G0822 and
+ * G0838 RAL releases (the same shift the QSPI pads in IONW took), so the map must follow the
+ * bitstream: with the wrong map the TX pads get the input value and RX_1 the output value, and
+ * both consoles go dead at boot. Board reading on acboot_838 (G0838, 2026-09-06): RX_0 at 0x100,
+ * TX_0 at 0x108, RX_1 at 0x110, TX_1 at 0x114, with TX pads reading 0x8 and transmitting.
+ * CONFIG_TSI_IONE_PADS_G0838 selects that map; the default is the G0822 map (ione_regs.h).
+ */
+#if IS_ENABLED(CONFIG_TSI_IONE_PADS_G0838)
+#define IONE_UART_RX_0_CONTROL  (IONE_BASE + 0x100U)
+#define IONE_UART_CTS_0_CONTROL (IONE_BASE + 0x104U)
+#define IONE_UART_TX_0_CONTROL  (IONE_BASE + 0x108U)
+#define IONE_UART_RTS_0_CONTROL (IONE_BASE + 0x10cU)
+#define IONE_UART_RX_1_CONTROL  (IONE_BASE + 0x110U)
+#define IONE_UART_TX_1_CONTROL  (IONE_BASE + 0x114U)
+#define IONE_UART_RTS_1_CONTROL (IONE_BASE + 0x118U)
+#define IONE_UART_CTS_1_CONTROL (IONE_BASE + 0x11cU)
+#else
 #define IONE_UART_RX_0_CONTROL  (IONE_BASE + 0x104U)
 #define IONE_UART_CTS_0_CONTROL (IONE_BASE + 0x108U)
 #define IONE_UART_TX_0_CONTROL  (IONE_BASE + 0x10cU)
@@ -48,6 +65,7 @@ FPGAIO_INIT(2);
 #define IONE_UART_TX_1_CONTROL  (IONE_BASE + 0x118U)
 #define IONE_UART_RTS_1_CONTROL (IONE_BASE + 0x11cU)
 #define IONE_UART_CTS_1_CONTROL (IONE_BASE + 0x120U)
+#endif
 
 #define IONE_REG(addr) (*(volatile uint32_t *)(addr))
 

@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2026 TSI
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * ProFPGA console overlay, uart1 variant, for the acboot_838 compiles on hex2.
+ *
+ * Measured 2026-09-06 on acboot_838_rtlDiv4_noProbe_I3CFailTiming: the one FTDI channel wired to a
+ * UART (/dev/ttyUSB3) carries uart1 (0x86002000 in the M85 view), and the UART clock on that
+ * compile is ~1.98 MHz, not 25 MHz: the SkyLpMin FD that prints cleanly at 115200 there uses
+ * IBRD 1 / FBRD 4, which is 115200 from 1979179 Hz. profpga.overlay (uart0, 25 MHz) is for the
+ * hexc1 flow compiles on hex1.
+ *
+ * Apply with (profpga_uart1.conf selects the G0838 IONE pad map in soc.c):
+ *   west build -b tsi_skylp/skylp/m85 tsi_core -- \
+ *       -DEXTRA_CONF_FILE="prj_poll.conf;$PWD/boards/tsi/skylp/profpga_uart1.conf" \
+ *       -DDTC_OVERLAY_FILE=$PWD/tsi_core/boards/gmc_ns_mem.overlay \
+ *       -DEXTRA_DTC_OVERLAY_FILE=$PWD/boards/tsi/skylp/profpga_uart1.overlay
+ */
+
+/ {
+	chosen {
+		zephyr,console = &uart1;
+		zephyr,shell-uart = &uart1;
+	};
+};
+
+&jtag_uart {
+	status = "disabled";
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&uartclk {
+	clock-frequency = <1979179>;
+};
